@@ -1,5 +1,5 @@
 # for_course
-How to setup gmail account to send emails?
+#How to setup gmail account to send emails?
 1. Create a Google account
 2. Go to console.cloud.google.com
 3. Create an project:
@@ -33,3 +33,12 @@ How to setup gmail account to send emails?
 ![image](https://user-images.githubusercontent.com/58738099/181845460-c12fc348-7e05-40b2-8cef-349cbbfc7be8.png)
 ![image](https://user-images.githubusercontent.com/58738099/181845490-7da61ed7-9dd2-4808-ad2b-443a58489793.png)
 8. Copy the file you got to the project folder and rename it to "client_secret.json".
+9. Launch main.py : `python ./main.py` or something like this, depending on your own system.
+10. Either automatically your browser shall be opened, or open the link you shall get. Then allow it to work.
+![image](https://user-images.githubusercontent.com/58738099/181846595-e376d429-6494-47f1-b039-1771a6d6ff7b.png)
+![image](https://user-images.githubusercontent.com/58738099/181846631-1ba9851f-5f36-419f-921a-95164db00e42.png)
+![image](https://user-images.githubusercontent.com/58738099/181846696-94044428-1153-412b-8843-5b325539b41c.png)
+![image](https://user-images.githubusercontent.com/58738099/181846738-d664b6e9-d340-4e86-8a18-ed1f793a0aa1.png)
+![image](https://user-images.githubusercontent.com/58738099/181846850-5e49c811-62e0-4796-9271-d351f2a68ccf.png)
+11. if you need, try to re-run `main.py` .
+
