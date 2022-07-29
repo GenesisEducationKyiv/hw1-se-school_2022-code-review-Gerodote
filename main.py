@@ -1,5 +1,6 @@
 import asyncio
 import json
+import sys
 
 import aiofiles
 
@@ -18,6 +19,7 @@ async def send_emails(mail_client, file_with_emails, subject_text, message_plain
                 subject_text=subject_text,
                 message_plain_text=message_plain_text
         )
+    return
 
 
 async def main():
@@ -31,6 +33,10 @@ async def main():
                                    subject_text="Ticker price BTC/UAH",
                                    message_plain_text=str(price_to_send) + str_disclaimer)
     await task_send_emails
+    # await asyncio.sleep(5)   
+    print("should exit now...")
+    sys.exit()
+    
 
 if __name__ == "__main__":
     asyncio.run(main())
