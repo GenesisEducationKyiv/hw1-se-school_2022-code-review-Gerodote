@@ -1,5 +1,5 @@
 # for_course
-#How to setup gmail account to send emails?
+## How to setup gmail account to send emails?
 1. Create a Google account
 2. Go to console.cloud.google.com
 3. Create an project:
