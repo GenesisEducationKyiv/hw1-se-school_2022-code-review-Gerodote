@@ -1,12 +1,25 @@
 # for_course
 ## How to run this?
-1.  `git clone https://github.com/Gerodote/for_course.git`
-2.  `pip install -r requirements.txt`
-3.  Setup gmail account as in guide below.
-4.  Run HTTP API server: `uvicorn main:API --host 0.0.0.0 --port 80` 
-5.  Check how it works with localhost:80/docs
+1.  Install python3 , desirable versions are 3.10.x or 3.9.x . Depending on your system:
+      
+      1.  Windows, find [installer](https://www.python.org/downloads/windows/) or install [`scoop`](https://scoop.sh/), then `scoop install python` .
+      2.  Linux, check is it exist in repositories of your distributive
+      3.  MacOs, idk google it. Maybe in [brew](https://formulae.brew.sh/formula/python@3.9) ?
+      4.  Android? [Termux](https://github.com/termux/termux-app/releases) is your best friend.
+2.  `git clone https://github.com/Gerodote/for_course.git` . If you haven't, install git. Again, in which way to do so depends on what's your system is 
+3.  `python -mpip install --upgrade pip` depending on your system, the beginning of the command can be `python3`
+3.  `pip install -r requirements.txt` or try `pip install aiofiles binance-connector fastapi uvicorn google-auth-httplib2 google-auth-oauthlib google-api-python-client python-multipart`. If your CPU has ARM architecture, strongly recommend type `pip install wheel` before this command. Especially, if you run in [termux](https://github.com/termux/termux-app/releases)
+4.  Setup gmail account as in guide below.
+5.  Run HTTP API server: `uvicorn main:API --host 0.0.0.0 --port 80` 
+6.  Check how it works with localhost:80/docs
 
 ## How to setup a gmail account to send emails?
+### Main idea:
+  1. Get OAuth2 key ( aka client_secret.json ) from Google Cloud Console
+  2. Initialize gmail service by running either `uvicorn main:API`, or `python mail_handler.py` for getting appropriate token with appropriate permissions for using the gmail. 
+  3. If you don't delete the `token_gmail_v1.pickle`, you can run this app again without doing what's below.
+ 
+### Let's start:
 1. Create a Google account
 2. Go to console.cloud.google.com
 3. Create an project:
