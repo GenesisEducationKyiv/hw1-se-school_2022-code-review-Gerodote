@@ -1,4 +1,13 @@
 # for_course
+## What this do?
+The program do next stuff:
+1. Connects to binance websockets using binance-connector python library, it gets best ask price and best bid price for 'BTC/UAH', gets arithmetic average.
+2. Creates a server API at port 8000 which can do what's written [here](https://github.com/AndriiPopovych/gses/blob/main/gses2swagger.yaml)
+      1. it can send rate, mentioned above
+      2. send to emails this rate using Gmail API
+      3. add emails, to which it should be sent.
+      
+
 ## How to run this?
 1.  Install python3 , desirable versions are 3.10.x or 3.9.x . Depending on your system:
       
