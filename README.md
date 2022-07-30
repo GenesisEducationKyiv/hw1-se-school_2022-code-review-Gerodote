@@ -17,7 +17,7 @@
 ### Main idea:
   1. Get OAuth2 key ( aka client_secret.json ) from Google Cloud Console
   2. Initialize gmail service by running either `uvicorn main:API`, or `python mail_handler.py` for getting appropriate token with appropriate permissions for using the gmail. 
-  3. If you don't delete the `token_gmail_v1.pickle`, you can run this app again without doing what's below. (at least during one hour)
+  3. If you don't delete the `token_gmail_v1.pickle`, you can run this app again without asking giving permission for sending emails from email you chose (in guide below it's step 10). (at least during one hour)
  
 ### Let's start:
 1. Create a Google account. For instance, you could do this [here](https://accounts.google.com/signup/v2/webcreateaccount).
