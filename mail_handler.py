@@ -1,6 +1,7 @@
+from abc import ABC, abstractmethod
+
 import gmail_API
 
-from abc import ABC, abstractmethod
 
 class Abstract_mail_handler(ABC):
     @abstractmethod

@@ -1,12 +1,14 @@
+import asyncio
+import logging
+
+from binance.lib.utils import config_logging
 from binance.websocket.spot.websocket_client import (
     SpotWebsocketClient as WebsocketClient,
 )
 
-import logging
-from binance.lib.utils import config_logging
-import asyncio
-
 config_logging(logging, logging.DEBUG)
+
+
 class book_ticker_price_binance:
     def __init__(self, symbols=None, symbol=None):
         if symbols != None and symbol != None:
@@ -45,7 +47,7 @@ class book_ticker_price_binance:
 
     def stop_ws(self):
         self._websocket_client.stop()
-    
+
     def stream_handler(self, message):
         self._message = message
         self._prices.update(

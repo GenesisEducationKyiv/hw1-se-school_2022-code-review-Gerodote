@@ -1,5 +1,5 @@
 import asyncio
-# from http.client import HTTPException
+
 from fastapi import FastAPI, Form, HTTPException, status
 from pydantic import BaseModel
 
@@ -9,41 +9,51 @@ API = FastAPI()
 
 main_object = class_main.main_app()
 
+
 @API.get("/rate")
 async def get_rate():
     try:
-        rate = await asyncio.wait_for(main_object.get_rate(), timeout=5 )
+        rate = await asyncio.wait_for(main_object.get_rate(), timeout=5)
     except asyncio.TimeoutError:
-        raise HTTPException(status_code=400,
-detail="Or try a little bit later, or check connection of server to Binance.")
+        raise HTTPException(
+            status_code=400,
+            detail="Or try a little bit later, or check connection of server to Binance.",
+        )
     return rate
+
+
 class Item_mail(BaseModel):
     email: str
+
 
 @API.post("/subscribe")
 async def subscribe(email: str = Form()):
     task = asyncio.create_task(main_object.subscribe(email))
     await task
     if task.result()[0] == 409:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=task.result()[1])
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=task.result()[1]
+        )
     return {"description": task.result()[1]}
 
-str_disclaimer = "\n\n\nThis message was sent because you was" +\
-" subscribed to have current price for this symbol. " +\
-        "Price is calculated in way (best_ask_price + best_bid_price) / 2 ."
+
+str_disclaimer = (
+    "\n\n\nThis message was sent because you was"
+    + " subscribed to have current price for this symbol. "
+    + "Price is calculated in way (best_ask_price + best_bid_price) / 2 ."
+)
+
 
 @API.post("/sendEmails")
 async def send_emails():
     rate = await main_object.get_rate()
     await main_object.send_emails(
-       subject_text="GSES2 BTC application",
-       message_plain_text=str(rate)+str_disclaimer
-   )
+        subject_text="GSES2 BTC application",
+        message_plain_text=str(rate) + str_disclaimer,
+    )
     return "Emails maybe sent. Check server's logs to check it's true or not."
-        
-        
+
+
 @API.on_event("shutdown")
 def shut_down():
     main_object.stop_binance_websocket()
-    
-    
