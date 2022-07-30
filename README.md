@@ -1,8 +1,9 @@
 # for_course
 ## How to run this?
-1.  git clone 
-2.  Setup gmail account as in guide below.
-3.
+1.  `git clone https://github.com/Gerodote/for_course.git`
+2.  `pip install -r requirements.txt`
+3.  Setup gmail account as in guide below.
+4.  Run HTTP API server: `uvicorn main:API --host 0.0.0.0 --port 80` 
 
 ## How to setup gmail account to send emails?
 1. Create a Google account
