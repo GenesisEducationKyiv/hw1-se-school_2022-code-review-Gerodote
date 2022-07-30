@@ -4,6 +4,7 @@
 2.  `pip install -r requirements.txt`
 3.  Setup gmail account as in guide below.
 4.  Run HTTP API server: `uvicorn main:API --host 0.0.0.0 --port 80` 
+5.  Check how it works with localhost:80/docs
 
 ## How to setup a gmail account to send emails?
 1. Create a Google account
