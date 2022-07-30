@@ -46,7 +46,7 @@ If you know how to resolv it, I would be pleased if you could submit an issue ab
   3. If you don't delete the `token_gmail_v1.pickle`, you can run this app again without asking giving permission for sending emails from email you chose (in guide below it's step 10). (at least during one hour)
  
 ### Let's start:
-1. Create a Google account. For instance, you could do this [here](https://accounts.google.com/signup/v2/webcreateaccount).
+1. Create a Google account. For instance, you could do this [here](https://accounts.google.com/signup/v2/webcreateaccount). In this guide, I had to setup dejfwy@gmail.com.
 2. Go to [console.cloud.google.com](https://console.cloud.google.com/)
 3. Create a project:
 
