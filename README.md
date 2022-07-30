@@ -1,4 +1,9 @@
 # for_course
+## How to run this?
+1.  git clone 
+2.  Setup gmail account as in guide below.
+3.
+
 ## How to setup gmail account to send emails?
 1. Create a Google account
 2. Go to console.cloud.google.com
