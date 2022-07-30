@@ -1,7 +1,6 @@
 import asyncio
 
 from fastapi import FastAPI, Form, HTTPException, status
-from pydantic import BaseModel
 
 import class_main
 
@@ -20,10 +19,6 @@ async def get_rate():
             detail="Or try a little bit later, or check connection of server to Binance.",
         )
     return rate
-
-
-class Item_mail(BaseModel):
-    email: str
 
 
 @API.post("/subscribe")
