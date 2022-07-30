@@ -1,42 +1,49 @@
 import asyncio
-import json
-import sys
+# from http.client import HTTPException
+from fastapi import FastAPI, Form, HTTPException, status
+from pydantic import BaseModel
 
-import aiofiles
+import class_main
 
-import GetterPriceBinance
-import mail_handler
+API = FastAPI()
+
+main_object = class_main.main_app()
+
+@API.get("/rate")
+async def get_rate():
+    try:
+        rate = await asyncio.wait_for(main_object.get_rate(), timeout=5 )
+    except asyncio.TimeoutError:
+        raise HTTPException(status_code=400,
+detail="Or try a little bit later, or check connection of server to Binance.")
+    return rate
+class Item_mail(BaseModel):
+    email: str
+
+@API.post("/subscribe")
+async def subscribe(email: str = Form()):
+    task = asyncio.create_task(main_object.subscribe(email))
+    await task
+    if task.result()[0] == 409:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=task.result()[1])
+    return {"description": task.result()[1]}
 
 str_disclaimer = "\n\n\nThis message was sent because you was" +\
 " subscribed to have current price for this symbol. " +\
-    "Price is calculated in way (best_ask_price + best_bid_price) / 2 ."
+        "Price is calculated in way (best_ask_price + best_bid_price) / 2 ."
 
-async def send_emails(mail_client, file_with_emails, subject_text, message_plain_text):
-    async with aiofiles.open(file_with_emails, "r") as subscribed_emails:
-        list_subscribed_emails = json.loads(await subscribed_emails.read())
-        mail_client.send_plain_messages_to_emails(
-                list_subscribed_emails=list_subscribed_emails,
-                subject_text=subject_text,
-                message_plain_text=message_plain_text
-        )
-    return
-
-
-async def main():
-    binance_websocket = GetterPriceBinance.book_ticker_price_binance(symbol="BTCUAH")
-    task_get_price = asyncio.create_task(binance_websocket.get_price("BTCUAH"))
-    mail_client = mail_handler.factory_mail_handler(mode='gmail')
-    await task_get_price
-    price_to_send = task_get_price.result()
-    task_send_emails = send_emails(mail_client=mail_client, 
-                                   file_with_emails='subscribed_emails.json',
-                                   subject_text="Ticker price BTC/UAH",
-                                   message_plain_text=str(price_to_send) + str_disclaimer)
-    await task_send_emails
-    # await asyncio.sleep(5)   
-    print("should exit now...")
-    sys.exit()
+@API.post("/sendEmails")
+async def send_emails():
+    rate = await main_object.get_rate()
+    await main_object.send_emails(
+       subject_text="GSES2 BTC application",
+       message_plain_text=str(rate)+str_disclaimer
+   )
+    return "Emails maybe sent. Check server's logs to check it's true or not."
+        
+        
+@API.on_event("shutdown")
+def shut_down():
+    main_object.stop_binance_websocket()
     
-
-if __name__ == "__main__":
-    asyncio.run(main())
+    
