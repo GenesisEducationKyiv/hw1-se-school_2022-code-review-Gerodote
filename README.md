@@ -7,7 +7,7 @@
       3.  MacOs, idk google it. Maybe in [brew](https://formulae.brew.sh/formula/python@3.9) ?
       4.  Android? [Termux](https://github.com/termux/termux-app/releases) is your best friend.
 2.  `git clone https://github.com/Gerodote/for_course.git` . If you haven't, install git. Again, in which way to do so depends on what's your system is 
-3.  `python -mpip install --upgrade pip` depending on your system, the beginning of the command can be `python3`
+3.  `python -mpip install --upgrade pip` . Depending on your system, the beginning of the command can be `python3`
 3.  `pip install -r requirements.txt` or try `pip install aiofiles binance-connector fastapi uvicorn google-auth-httplib2 google-auth-oauthlib google-api-python-client python-multipart`. If your CPU has ARM architecture, strongly recommend type `pip install wheel` before this command. Especially, if you run in [termux](https://github.com/termux/termux-app/releases)
 4.  Setup gmail account as in guide below.
 5.  Run HTTP API server: `uvicorn main:API --host 0.0.0.0 --port 80` 
@@ -20,14 +20,14 @@
   3. If you don't delete the `token_gmail_v1.pickle`, you can run this app again without doing what's below.
  
 ### Let's start:
-1. Create a Google account
-2. Go to console.cloud.google.com
-3. Create an project:
+1. Create a Google account. For instance, you could do this [here](https://accounts.google.com/signup/v2/webcreateaccount).
+2. Go to [console.cloud.google.com](https://console.cloud.google.com/)
+3. Create a project:
 
 ![image](https://user-images.githubusercontent.com/58738099/181842338-c9328c53-d950-46d9-b5bc-dbabb8a01300.png)
 ![image](https://user-images.githubusercontent.com/58738099/181842652-04f0a47c-bfeb-4f2c-a2be-44b9f04671dc.png)
 
-4. Create OAuth app:
+4. Create an OAuth app:
 
 ![image](https://user-images.githubusercontent.com/58738099/181843113-2f532ad3-6e96-4501-a628-8b2206856860.png)
 ![image](https://user-images.githubusercontent.com/58738099/181843160-2524ec35-a8fb-4789-85e8-81a3575400c6.png)
@@ -44,7 +44,7 @@
 ![image](https://user-images.githubusercontent.com/58738099/181844178-a2f5a9ee-b4cf-4da3-8938-fc4c85bb2841.png)
 ![image](https://user-images.githubusercontent.com/58738099/181844222-df4c7a1f-3616-4dfa-bc0f-14384f4ec8c3.png)
 
-6. Add appropriate scope for your OAuth app:
+6. Add appropriate scope (aka permissions) for your OAuth app:
 
 ![image](https://user-images.githubusercontent.com/58738099/181844402-0c9272c1-8110-49ca-87bd-181ac5831c17.png)
 ![image](https://user-images.githubusercontent.com/58738099/181844461-76a3b2bd-c142-4fab-b849-5e22855f7584.png)
@@ -63,7 +63,7 @@
 ![image](https://user-images.githubusercontent.com/58738099/181845490-7da61ed7-9dd2-4808-ad2b-443a58489793.png)
 
 8. Copy the file you got to the project folder and rename it to "client_secret.json".
-9. Launch mail_handler.py or just run server: `python ./mail_handler.py` or `uvicorn main:API` or something like this, depending on your own system.
+9. Launch mail_handler.py or just run server: `python ./mail_handler.py` or `uvicorn main:API`
 10. Either automatically your browser shall be opened, or open the link you shall get in console. Then allow it to work:
 
 ![image](https://user-images.githubusercontent.com/58738099/181846595-e376d429-6494-47f1-b039-1771a6d6ff7b.png)
