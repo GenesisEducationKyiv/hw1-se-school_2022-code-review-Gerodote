@@ -2,7 +2,10 @@
 /Include
 /Lib
 /Scripts
-./pyvenv
-./token.json
-./subscribed_emails.json
-./client_secret.json
+/.vscode
+pyvenv.cfg
+token.json
+subscribed_emails.json
+subscribed_emails__saved.json
+token_gmail_v1.pickle
+client_secret.json
