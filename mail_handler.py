@@ -45,5 +45,9 @@ def factory_mail_handler(mode='gmail', *args, **kwargs) -> Abstract_mail_handler
         raise KeyError(f"such mode either don't exist or didn't implemented.")
 
         
-            
+if __name__ == "__main__":
+    print("Executing initialization of gmail account.")
+    print("!!! WARNING: don't delete this file after configuring gmail API, "+\
+        "because this file is also used to run the gmail API on server.")
+    gmail_client = gmail_handler()            
             
