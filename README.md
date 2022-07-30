@@ -13,6 +13,23 @@
 5.  Run HTTP API server: `uvicorn main:API --host 0.0.0.0 --port 80` 
 6.  Check how it works with localhost:80/docs
 
+## Is docker available?
+
+**Quick answer**: *No*
+
+**Long answer**: python environment using dockerfile is appropriate, though idk how to allow gmail service server, which should work at 8080, get connection from outside to this.
+If you want, try:
+1.  `git clone https://github.com/Gerodote/for_course.git`
+2.  Go to folder in which this project `cd ./for_course`
+3.  Get `client_secret.json` from guide below and copy it to the project folder.
+4.  Build image: `docker build -t for_cousre_docker_image .`
+5. Try this... :`docker run -it -v /project/folder/on/your/computer:/app/src -p 8000:8000 -p 8080:8080 -p 443:443 -p 80:80 -p 5353:5353 --name my-api for_cousre_docker_image`
+6. Try get gmail token as in guide below (step 10 like)
+7. ???
+8. The app inside docker didn't get the token.
+
+If you know how to resolv it, I would be pleased if you could submit an issue about this and explain how to deal with it.
+
 ## How to setup a gmail account to send emails?
 ### Main idea:
   1. Get OAuth2 key ( aka client_secret.json ) from Google Cloud Console
