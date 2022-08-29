@@ -12,9 +12,6 @@ import mail_handler
 
 class main_app:
     def __new__(cls):
-        """
-        Singleton. Sorry, sometimes I'm stupid.
-        """
         if not hasattr(cls, "instance"):
             cls.instance = super(main_app, cls).__new__(cls)
         return cls.instance
@@ -78,4 +75,4 @@ class main_app:
                 subject_text=subject_text,
                 message_plain_text=message_plain_text,
             )
-        return
+        

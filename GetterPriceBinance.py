@@ -55,10 +55,10 @@ class book_ticker_price_binance:
         )
 
     async def get_price(self, symbol):
-        if not bool(len([True for symb in self._subscribed_symbols if symb == symbol])):
+        if symbol not in self._subscribed_symbols:
             raise KeyError(f"You haven't subscribed getting {symbol}.")
         while True:
-            if bool(len([True for key in self._prices.keys() if key == symbol])):
+            if symbol in self._prices.keys():
                 return self._prices[symbol]
             await asyncio.sleep(1)  # in secs
 
