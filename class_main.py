@@ -39,7 +39,6 @@ class main_app:
         if os.path.exists(self._file_with_emails):
             async with aiofiles.open(self._file_with_emails, "r") as subscribed_emails:
                 raw_data = await subscribed_emails.read()
-                # print(f"raw_data is : {raw_data}")
                 try:
                     data = json.loads(raw_data)
                 except json.JSONDecodeError:
