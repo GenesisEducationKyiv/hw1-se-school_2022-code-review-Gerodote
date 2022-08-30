@@ -11,14 +11,14 @@ main_object = class_main.main_app()
 
 @API.get("/rate")
 async def get_rate():
-    try:
-        rate = await asyncio.wait_for(main_object.get_rate(), timeout=5)
-    except asyncio.TimeoutError:
+    rate = main_object.get_rate()
+    if rate is None:
         raise HTTPException(
             status_code=400,
             detail="Or try a little bit later, or check connection of server to Binance.",
         )
-    return rate
+    else:
+        return rate
 
 
 @API.post("/subscribe")

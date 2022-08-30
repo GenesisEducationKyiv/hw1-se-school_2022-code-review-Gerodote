@@ -23,7 +23,6 @@ class book_ticker_price_binance:
         self._prices = {}
         self._subscribed_symbols = []
         if symbols != None:
-            # print("symbols")
             self._subscribed_symbols = symbols
             self._symbols_in_lower_case = [symbol.lower() for symbol in symbols]
             self._streams = [
@@ -32,7 +31,6 @@ class book_ticker_price_binance:
             self._websocket_client.instant_subscribe(
                 stream=self._streams, callback=self.streams_handler
             )
-            # return self
 
         if symbol != None:
             self._subscribed_symbols += [symbol]
@@ -57,11 +55,11 @@ class book_ticker_price_binance:
     async def get_price(self, symbol):
         if symbol not in self._subscribed_symbols:
             raise KeyError(f"You haven't subscribed getting {symbol}.")
-        while True:
-            if symbol in self._prices.keys():
-                return self._prices[symbol]
-            await asyncio.sleep(1)  # in secs
-
+        if symbol in self._prices.keys():
+            return self._prices[symbol]
+        else:
+            return None
+            
     def get_all_prices(self):
         return self._prices
 

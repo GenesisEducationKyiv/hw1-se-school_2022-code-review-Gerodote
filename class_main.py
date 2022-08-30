@@ -43,6 +43,7 @@ class main_app:
                 try:
                     data = json.loads(raw_data)
                 except json.JSONDecodeError:
+                    # if was "sth.sth2.sth3.json", it will be saved to "sth.sth2.sth3__saved.json"
                     copy_destination = (
                         (".".join(((str(self._file_with_emails)).split("."))[:-1]))
                         + "__saved."
