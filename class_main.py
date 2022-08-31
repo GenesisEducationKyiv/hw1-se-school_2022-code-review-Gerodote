@@ -5,6 +5,7 @@ import shutil
 from typing import Tuple
 
 import aiofiles
+import yaml
 
 import getter_price_binance
 import mail_handler
@@ -17,12 +18,14 @@ class MainApp:
         return cls.instance
 
     def __init__(self):
-        self._mail_client = mail_handler.factory_mail_handler(mode="gmail")
-        self._binance_websocket = getter_price_binance.BookTickerPriceBinance(
-            symbol="BTCUAH"
-        )
-        self._file_with_emails = "subscribed_emails.json"
-        return
+        with open('config.yaml') as file:
+            config = yaml.safe_load(file)
+            self._mail_client = mail_handler.factory_mail_handler(mode="gmail",**config["emails"]["gmail"] )
+            self._binance_websocket = getter_price_binance.BookTickerPriceBinance(
+                symbol=config["symbols"]["name"][0]
+            )
+            self._file_with_emails = config["emails"]["file_with_emails"]
+            return
 
     def stop_binance_websocket(self):
         self._binance_websocket.stop_ws()
