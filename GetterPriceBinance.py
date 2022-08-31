@@ -45,7 +45,7 @@ class BookTickerPriceBinance:
         self._symbol_in_lower_case = self._subscribed_symbols[0].lower()
         self._websocket_client.instant_subscribe(
             stream=f"{self._symbol_in_lower_case}@bookTicker",
-            callback=self.handler_of_a_stream,
+            callback=self.handler_of_a_stream_bookTicker,
         )
 
     
@@ -56,7 +56,19 @@ class BookTickerPriceBinance:
     def stop_ws(self):
         self._websocket_client.stop()
 
-    def handler_of_a_stream(self, message):
+    def handler_of_a_stream_bookTicker(self, message):
+        '''
+        According to https://docs.binance.us/#individual-symbol-ticker-streams we get sth like this:
+        {
+            "u":400900217,     // order book updateId
+            "s":"BNBUSDT",     // symbol
+            "b":"25.35190000", // best bid price
+            "B":"31.21000000", // best bid qty
+            "a":"25.36520000", // best ask price
+            "A":"40.66000000"  // best ask qty
+        }
+        So, we put in object field average price ( (best bid price + best ask price )/2)
+        '''
         self._message = message
         self._prices.update(
             {message["s"]: (float(self._message["a"]) + float(self._message["b"])) / 2}
@@ -75,4 +87,4 @@ class BookTickerPriceBinance:
 
     def handler_of_streams(self, message):
         self._message = message
-        self.handler_of_a_stream(message=message["data"])
+        self.handler_of_a_stream_bookTicker(message=message["data"])
