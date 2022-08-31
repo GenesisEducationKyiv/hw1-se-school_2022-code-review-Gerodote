@@ -45,7 +45,7 @@ class BookTickerPriceBinance:
         self._symbol_in_lower_case = self._subscribed_symbols[0].lower()
         self._websocket_client.instant_subscribe(
             stream=f"{self._symbol_in_lower_case}@bookTicker",
-            callback=self.handler_of_a_stream_bookTicker,
+            callback=self.handler_of_a_message_from_stream_bookTicker,
         )
 
     
@@ -56,7 +56,7 @@ class BookTickerPriceBinance:
     def stop_ws(self):
         self._websocket_client.stop()
 
-    def handler_of_a_stream_bookTicker(self, message):
+    def handler_of_a_message_from_stream_bookTicker(self, message):
         '''
         According to https://docs.binance.us/#individual-symbol-ticker-streams we get sth like this:
         {
@@ -87,4 +87,4 @@ class BookTickerPriceBinance:
 
     def handler_of_streams(self, message):
         self._message = message
-        self.handler_of_a_stream_bookTicker(message=message["data"])
+        self.handler_of_a_message_from_stream_bookTicker(message=message["data"])
