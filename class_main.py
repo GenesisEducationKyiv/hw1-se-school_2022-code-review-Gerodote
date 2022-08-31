@@ -6,7 +6,7 @@ from typing import Tuple
 
 import aiofiles
 
-import GetterPriceBinance
+import getter_price_binance
 import mail_handler
 
 
@@ -18,7 +18,7 @@ class MainApp:
 
     def __init__(self):
         self._mail_client = mail_handler.factory_mail_handler(mode="gmail")
-        self._binance_websocket = GetterPriceBinance.BookTickerPriceBinance(
+        self._binance_websocket = getter_price_binance.BookTickerPriceBinance(
             symbol="BTCUAH"
         )
         self._file_with_emails = "subscribed_emails.json"
