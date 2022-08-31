@@ -9,36 +9,46 @@ from binance.websocket.spot.websocket_client import (
 config_logging(logging, logging.DEBUG)
 
 
-class book_ticker_price_binance:
+class BookTickerPriceBinance:
     def __init__(self, symbols=None, symbol=None):
-        if symbols != None and symbol != None:
+        if symbols is not None and symbol is not None:
             raise ValueError(
                 "Getter_price_binance: Please, write or symbols OR symbol."
             )
-        if symbols == None and symbol == None:
+        if symbols is None and symbol is None:
             raise TypeError("Getter_price_binance: Please, enter any param.")
+        self._message = None
+        self._prices = {}        
+        self._subscribed_symbols = []
+        
         self._websocket_client = WebsocketClient()
         self._websocket_client.start()
-        self._message = None
-        self._prices = {}
-        self._subscribed_symbols = []
-        if symbols != None:
+        
+        if symbols is not None:
             self._subscribed_symbols = symbols
-            self._symbols_in_lower_case = [symbol.lower() for symbol in symbols]
-            self._streams = [
-                f"{symbol}@bookTicker" for symbol in self._symbols_in_lower_case
-            ]
-            self._websocket_client.instant_subscribe(
-                stream=self._streams, callback=self.streams_handler
-            )
-
-        if symbol != None:
+            self.start_combined_streams()
+            
+        if symbol is not None:
             self._subscribed_symbols += [symbol]
-            self._symbol_in_lower_case = symbol.lower()
-            self._websocket_client.instant_subscribe(
-                stream=f"{self._symbol_in_lower_case}@bookTicker",
-                callback=self.stream_handler,
-            )
+            self.start_a_raw_stream()
+
+    def _start_combined_streams(self):
+        self._symbols_in_lower_case = [symbol.lower() for symbol in self._subscribed_symbols]
+        self._streams = [
+            f"{symbol}@bookTicker" for symbol in self._symbols_in_lower_case
+        ]
+        self._websocket_client.instant_subscribe(
+            stream=self._streams, callback=self.handler_of_streams
+        )
+
+    def _start_raw_stream(self): 
+        self._symbol_in_lower_case = self._subscribed_symbols[0].lower()
+        self._websocket_client.instant_subscribe(
+            stream=f"{self._symbol_in_lower_case}@bookTicker",
+            callback=self.handler_of_a_stream,
+        )
+
+    
 
     def __del__(self):
         self._websocket_client.stop()
@@ -46,7 +56,7 @@ class book_ticker_price_binance:
     def stop_ws(self):
         self._websocket_client.stop()
 
-    def stream_handler(self, message):
+    def handler_of_a_stream(self, message):
         self._message = message
         self._prices.update(
             {message["s"]: (float(self._message["a"]) + float(self._message["b"])) / 2}
@@ -63,6 +73,6 @@ class book_ticker_price_binance:
     def get_all_prices(self):
         return self._prices
 
-    def streams_handler(self, message):
+    def handler_of_streams(self, message):
         self._message = message
-        self.stream_handler(message=message["data"])
+        self.handler_of_a_stream(message=message["data"])

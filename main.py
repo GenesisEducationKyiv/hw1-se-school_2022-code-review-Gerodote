@@ -6,7 +6,7 @@ import class_main
 
 API = FastAPI()
 
-main_object = class_main.main_app()
+main_object = class_main.MainApp()
 
 
 @API.get("/rate")

@@ -10,15 +10,15 @@ import GetterPriceBinance
 import mail_handler
 
 
-class main_app:
+class MainApp:
     def __new__(cls):
         if not hasattr(cls, "instance"):
-            cls.instance = super(main_app, cls).__new__(cls)
+            cls.instance = super(MainApp, cls).__new__(cls)
         return cls.instance
 
     def __init__(self):
         self._mail_client = mail_handler.factory_mail_handler(mode="gmail")
-        self._binance_websocket = GetterPriceBinance.book_ticker_price_binance(
+        self._binance_websocket = GetterPriceBinance.BookTickerPriceBinance(
             symbol="BTCUAH"
         )
         self._file_with_emails = "subscribed_emails.json"

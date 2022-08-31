@@ -9,7 +9,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
 
-class basic_gmail_api:
+class BasicGmailAPI:
     def __init__(self, client_secret_file, api_name, api_version, scopes):
         self._CLIENT_SECRET_FILE = client_secret_file
         self._API_SERVICE_NAME = api_name
