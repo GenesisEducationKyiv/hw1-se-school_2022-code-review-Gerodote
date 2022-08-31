@@ -27,13 +27,10 @@ class MainApp:
     def stop_binance_websocket(self):
         self._binance_websocket.stop_ws()
 
-    async def get_rate(self) -> float:
-        task_get_price = asyncio.create_task(
-            self._binance_websocket.get_price("BTCUAH")
-        )
-        await task_get_price
-        return task_get_price.result()
-
+    def get_rate(self) -> float:
+        task_get_price = self._binance_websocket.get_price("BTCUAH")
+        return task_get_price
+    
     async def _read_file_with_emails(self):
         data = []
         if os.path.exists(self._file_with_emails):
@@ -49,7 +46,7 @@ class MainApp:
                         + str(self._file_with_emails).split(".")[-1]
                     )
                     print(
-                        f"!!! File subscribed_emails is broken. Copying it to {copy_destination}"
+                        f"!!! File {self._file_with_emails} is broken. Copying it to {copy_destination}"
                     )
                     shutil.copy2(self._file_with_emails, copy_destination)
         return data

@@ -10,7 +10,7 @@ main_object = class_main.MainApp()
 
 
 @API.get("/rate")
-async def get_rate():
+def get_rate():
     rate = main_object.get_rate()
     if rate is None:
         raise HTTPException(
@@ -41,7 +41,7 @@ str_disclaimer = (
 
 @API.post("/sendEmails")
 async def send_emails():
-    rate = await main_object.get_rate()
+    rate = main_object.get_rate()
     await main_object.send_emails(
         subject_text="GSES2 BTC application",
         message_plain_text=str(rate) + str_disclaimer,

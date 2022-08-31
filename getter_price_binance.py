@@ -26,11 +26,11 @@ class BookTickerPriceBinance:
         
         if symbols is not None:
             self._subscribed_symbols = symbols
-            self.start_combined_streams()
+            self._start_combined_streams()
             
         if symbol is not None:
             self._subscribed_symbols += [symbol]
-            self.start_a_raw_stream()
+            self._start_a_raw_stream()
 
     def _start_combined_streams(self):
         self._symbols_in_lower_case = [symbol.lower() for symbol in self._subscribed_symbols]
@@ -41,7 +41,7 @@ class BookTickerPriceBinance:
             stream=self._streams, callback=self.handler_of_streams
         )
 
-    def _start_raw_stream(self): 
+    def _start_a_raw_stream(self): 
         self._symbol_in_lower_case = self._subscribed_symbols[0].lower()
         self._websocket_client.instant_subscribe(
             stream=f"{self._symbol_in_lower_case}@bookTicker",
@@ -74,7 +74,7 @@ class BookTickerPriceBinance:
             {message["s"]: (float(self._message["a"]) + float(self._message["b"])) / 2}
         )
 
-    async def get_price(self, symbol):
+    def get_price(self, symbol):
         if symbol not in self._subscribed_symbols:
             raise KeyError(f"You haven't subscribed getting {symbol}.")
         if symbol in self._prices.keys():

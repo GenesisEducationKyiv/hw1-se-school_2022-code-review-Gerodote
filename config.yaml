@@ -1,0 +1,8 @@
+symbols:
+  name: "BTCUAH"
+gmail:
+  client_secret_file_name: "client_secret.json"
+  api_name: "gmail"
+  api_version: "v1"
+  scopes: ['https://www.googleapis.com/auth/gmail.send']
+  
