@@ -40,8 +40,6 @@ def factory_mail_handler(mode='gmail', *args, **kwargs) -> AbstractMailHandler:
         '''
         if mode == 'gmail':
             return GmailHandler(*args, **kwargs)
-        # if mode == 'SMTP':
-        #     return SMTP_handler(*args, **kwargs)
         raise KeyError(f"such mode either don't exist or didn't implemented.")
 
         
