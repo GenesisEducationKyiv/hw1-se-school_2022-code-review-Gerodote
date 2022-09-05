@@ -10,7 +10,7 @@ def test_wrong_email_address_3():
     assert MainApp.is_valid_email_address('kk@') == False
     
 def test_wrong_email_address_4():
-    assert MainApp.is_valid_email_address('<<<>>>') == False
+    assert MainApp.is_valid_email_address('sth@sthsth') == False
     
 def test_wrong_email_address_5():
     assert MainApp.is_valid_email_address('<<<>>>@<<<<>>>>.OO') == False

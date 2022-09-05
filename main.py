@@ -29,6 +29,10 @@ async def subscribe(email: str = Form()):
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT, detail=task.result()[1]
         )
+    if task.result()[0] == 406:
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=task.result()[1]
+        ) 
     return {"description": task.result()[1]}
 
 
