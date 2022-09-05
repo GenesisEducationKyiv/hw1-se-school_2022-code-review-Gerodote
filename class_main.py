@@ -1,5 +1,6 @@
 import asyncio
 import json
+import re
 import os
 import shutil
 from typing import Tuple
@@ -58,10 +59,21 @@ class MainApp:
         async with aiofiles.open(self._file_with_emails, "w") as subscribed_emails:
             await subscribed_emails.write(json.dumps(data))
 
+    @staticmethod
+    def is_valid_email_address(email:str):
+        '''
+        according to https://en.wikipedia.org/wiki/Email_address#Local-part
+        '''
+        if( re.fullmatch(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', email)):
+            return True
+        return False
+
     async def subscribe(self, email: str) -> Tuple[(int, str)]:
         print(f"foo subscribe got email: {email}")
         data = await self._read_file_with_emails()
         if not email in data:
+            if not self.is_valid_email_address(email):           
+                return (406, "Invalid email address")
             data.append(email)
             await self._write_file_with_emails(data)
             return (200, "E-mail added")
