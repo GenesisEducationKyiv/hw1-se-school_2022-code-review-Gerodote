@@ -9,7 +9,14 @@ def test_REST_bookTicker_is_same_as_ws_book_ticker():
     spot_client = Client()
     symbol = 'BTCUAH'
     ws_client = BookTickerPriceBinance(symbol=symbol) 
-    sleep(15)
+    for_do_while:bool = True
+    count_how_many_times_checked = 0
+    while(for_do_while):
+        sleep(15)
+        if ws_client.get_price(symbol=symbol) is not None:
+            for_do_while = False
+        if count_how_many_times_checked > 8:
+            for_do_while = False
     from_REST_API = spot_client.book_ticker(symbol=symbol)
     '''
         here we got sth like this:
