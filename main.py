@@ -2,11 +2,11 @@ import asyncio
 
 from fastapi import FastAPI, Form, HTTPException, status
 
-import class_main
+from src.class_main import MainApp
 
 API = FastAPI()
 
-main_object = class_main.MainApp()
+main_object = MainApp()
 
 
 @API.get("/rate")
