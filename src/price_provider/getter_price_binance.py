@@ -1,15 +1,17 @@
 import asyncio
 import logging
+from typing import Union
 
 from binance.lib.utils import config_logging
 from binance.websocket.spot.websocket_client import (
     SpotWebsocketClient as WebsocketClient,
 )
 
+from .general_part import GetterPrice
+
 config_logging(logging, logging.DEBUG)
 
-
-class BookTickerPriceBinance:
+class BookTickerPriceBinance(GetterPrice):
     def __init__(self, symbols=None, symbol=None):
         if symbols is not None and symbol is not None:
             raise ValueError(
@@ -48,8 +50,6 @@ class BookTickerPriceBinance:
             callback=self.handler_of_a_message_from_stream_bookTicker,
         )
 
-    
-
     def __del__(self):
         self._websocket_client.stop()
 
@@ -74,7 +74,7 @@ class BookTickerPriceBinance:
             {message["s"]: (float(self._message["a"]) + float(self._message["b"])) / 2}
         )
 
-    def get_price(self, symbol):
+    def get_price(self, symbol) -> Union[float, None]:
         if symbol not in self._subscribed_symbols:
             raise KeyError(f"You haven't subscribed getting {symbol}.")
         if symbol in self._prices.keys():

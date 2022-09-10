@@ -8,7 +8,7 @@ from typing import Tuple
 import aiofiles
 import yaml
 
-from .price_provider.getter_price_binance import BookTickerPriceBinance
+from .price_provider.getter_price_binance import BookTickerPriceBinance, GetterPrice
 from .email_handling.mail_handler import factory_mail_handler
 
 
@@ -21,42 +21,42 @@ class MainApp:
     def __init__(self):
         with open('config.yaml') as file:
             config = yaml.safe_load(file)
-            self._mail_client = factory_mail_handler(mode="gmail",**config["emails"]["gmail"] )
-            self._binance_websocket = BookTickerPriceBinance(
+            self.__mail_client = factory_mail_handler(mode="gmail",**config["emails"]["gmail"] )
+            self.__getter_price:GetterPrice = BookTickerPriceBinance(
                 symbol=config["symbols"]["name"][0]
             )
-            self._file_with_emails = config["emails"]["file_with_emails"]
+            self.__file_with_emails = config["emails"]["file_with_emails"]
             return
 
     def stop_binance_websocket(self):
-        self._binance_websocket.stop_ws()
+        self.__getter_price.stop_ws()
 
     def get_rate(self) -> float:
-        task_get_price = self._binance_websocket.get_price("BTCUAH")
+        task_get_price = self.__getter_price.get_price("BTCUAH")
         return task_get_price
     
     async def _read_file_with_emails(self):
         data = []
-        if os.path.exists(self._file_with_emails):
-            async with aiofiles.open(self._file_with_emails, "r") as subscribed_emails:
+        if os.path.exists(self.__file_with_emails):
+            async with aiofiles.open(self.__file_with_emails, "r") as subscribed_emails:
                 raw_data = await subscribed_emails.read()
                 try:
                     data = json.loads(raw_data)
                 except json.JSONDecodeError:
                     # if was "sth.sth2.sth3.json", it will be saved to "sth.sth2.sth3__saved.json"
                     copy_destination = (
-                        (".".join(((str(self._file_with_emails)).split("."))[:-1]))
+                        (".".join(((str(self.__file_with_emails)).split("."))[:-1]))
                         + "__saved."
-                        + str(self._file_with_emails).split(".")[-1]
+                        + str(self.__file_with_emails).split(".")[-1]
                     )
                     print(
-                        f"!!! File {self._file_with_emails} is broken. Copying it to {copy_destination}"
+                        f"!!! File {self.__file_with_emails} is broken. Copying it to {copy_destination}"
                     )
-                    shutil.copy2(self._file_with_emails, copy_destination)
+                    shutil.copy2(self.__file_with_emails, copy_destination)
         return data
 
     async def _write_file_with_emails(self, data):
-        async with aiofiles.open(self._file_with_emails, "w") as subscribed_emails:
+        async with aiofiles.open(self.__file_with_emails, "w") as subscribed_emails:
             await subscribed_emails.write(json.dumps(data))
 
     @staticmethod
@@ -80,9 +80,9 @@ class MainApp:
         return (409, "E-mail already subscribed")
 
     async def send_emails(self, subject_text, message_plain_text):
-        async with aiofiles.open(self._file_with_emails, "r") as subscribed_emails:
+        async with aiofiles.open(self.__file_with_emails, "r") as subscribed_emails:
             list_subscribed_emails = json.loads(await subscribed_emails.read())
-            self._mail_client.send_plain_messages_to_emails(
+            self.__mail_client.send_plain_messages_to_emails(
                 list_subscribed_emails=list_subscribed_emails,
                 subject_text=subject_text,
                 message_plain_text=message_plain_text,
