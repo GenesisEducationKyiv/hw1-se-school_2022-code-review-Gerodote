@@ -7,3 +7,6 @@ emails:
     api_name: "gmail"
     api_version: "v1"
     scopes: ['https://www.googleapis.com/auth/gmail.send']
+  subject: "GSES2 BTC application"
+  text_before_rate: ""
+  text_after_rate: "\n\n\nThis message was sent because you was subscribed to have current price for this symbol. Price is calculated in way (best_ask_price + best_bid_price) / 2 ."

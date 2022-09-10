@@ -1,7 +1,7 @@
-import asyncio
-
 from fastapi import FastAPI, Form, HTTPException, status
+from pydantic.error_wrappers import ValidationError
 
+from src.email_handling.email_handler import AlreadyExist
 from src.class_main import MainApp
 
 API = FastAPI()
@@ -23,36 +23,25 @@ def get_rate():
 
 @API.post("/subscribe")
 async def subscribe(email: str = Form()):
-    task = asyncio.create_task(main_object.subscribe(email))
-    await task
-    if task.result()[0] == 409:
+    try:    
+        task = await main_object.subscribe(email)
+    except AlreadyExist as exception_obj:
         raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT, detail=task.result()[1]
+            status_code=status.HTTP_409_CONFLICT, detail=exception_obj.__str__()
         )
-    if task.result()[0] == 406:
+    except ValidationError as exception_obj:
         raise HTTPException(
-            status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=task.result()[1]
+            status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=exception_obj.__str__()
         ) 
-    return {"description": task.result()[1]}
-
-
-str_disclaimer = (
-    "\n\n\nThis message was sent because you was"
-    + " subscribed to have current price for this symbol. "
-    + "Price is calculated in way (best_ask_price + best_bid_price) / 2 ."
-)
+    return {"description": "succesfully"}
 
 
 @API.post("/sendEmails")
 async def send_emails():
-    rate = main_object.get_rate()
-    await main_object.send_emails(
-        subject_text="GSES2 BTC application",
-        message_plain_text=str(rate) + str_disclaimer,
-    )
+    await main_object.send_emails()
     return "Emails maybe sent. Check server's logs to check it's true or not."
 
 
-@API.on_event("shutdown")
-def shut_down():
-    main_object.stop_binance_websocket()
+# @API.on_event("shutdown")
+# def shut_down():
+#     main_object.stop_binance_websocket()

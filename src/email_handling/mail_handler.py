@@ -1,18 +1,20 @@
 from abc import ABC, abstractmethod
+from typing import List
 
+from .general_part import Email
 from .gmail_API import BasicGmailAPI
 
 
-class AbstractMailHandler(ABC):
+class AbstractMailSender(ABC):
     @abstractmethod
     def send_plain_messages_to_emails(self,
-                                      list_subscribed_emails,
-                                      subject_text,
-                                      message_plain_text):
+                                      list_subscribed_emails:List[Email],
+                                      subject_text:str,
+                                      message_plain_text:str):
         pass
     
     
-class GmailHandler(AbstractMailHandler):
+class GmailSender(AbstractMailSender):
     def __init__(self,
                  client_secret_file='client_secret.json',
                  api_name='gmail',
@@ -25,21 +27,22 @@ class GmailHandler(AbstractMailHandler):
                                                        scopes)
         
     def send_plain_messages_to_emails(self,
-                                            list_subscribed_emails,
-                                            subject_text, message_plain_text):
+                                      list_subscribed_emails:List[Email],
+                                      subject_text:str, 
+                                      message_plain_text:str):
         for email in list_subscribed_emails:
             self._gmail_client.send_message_plain_text(
-                to=email,
+                to=email.str,
                 subject=subject_text,
                 message_text=message_plain_text
             )
         
-def factory_mail_handler(mode='gmail', *args, **kwargs) -> AbstractMailHandler:
+def factory_mail_handler(mode='gmail', *args, **kwargs) -> AbstractMailSender:
         '''
         Use any mode from: "gmail", "SMTP"
         '''
         if mode == 'gmail':
-            return GmailHandler(*args, **kwargs)
+            return GmailSender(*args, **kwargs)
         raise KeyError(f"such mode either don't exist or didn't implemented.")
 
         
@@ -47,5 +50,5 @@ if __name__ == "__main__":
     print("Executing initialization of gmail account.")
     print("!!! WARNING: don't delete this file after configuring gmail API, "+\
         "because this file is also used to run the gmail API on server.")
-    gmail_client = GmailHandler()            
+    gmail_client = GmailSender()            
             
