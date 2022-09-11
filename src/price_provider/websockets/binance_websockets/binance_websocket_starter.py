@@ -21,7 +21,7 @@ class BinanceWebsocketStarter():
     def subscribe_one_stream(
             self, stream: stream_t,
             message_handler: Callable[[Union[List, Dict]], None]) -> None:
-        self._websocket.instant_subscribe(stream=stream,
+        self._websocket.instant_subscribe(stream=stream.name,
                                           callback=message_handler)
 
     def subscribe_multiple_streams(

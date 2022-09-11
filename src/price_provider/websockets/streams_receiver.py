@@ -1,17 +1,16 @@
 from time import time
 from typing import Callable, Dict, Union
 
-from price_provider.websockets.general_part import AbstractSetPrice
+from ..general_part import AbstractPriceStorage, symbol_t
         
 class WebsocketStreamsReceiver():
     __connected_streams = []
     __dict_connected_streams_time = {}
     delta_time = 10 # secs
     
-    def __init__(self, handler_message_data:Callable, key_in_message_corresponding_to_stream_name:Union[str, None], data_storage:AbstractSetPrice):
+    def __init__(self, handler_message_data:Callable, key_in_message_corresponding_to_stream_name:Union[str, None]):
         self.__data_handler = handler_message_data     
         self.__key_in_message_corresponding_to_stream_name = key_in_message_corresponding_to_stream_name
-        self.__data_storage = AbstractSetPrice(data_storage)
                 
     def __call__(self, message:Dict):
         '''
@@ -23,6 +22,7 @@ class WebsocketStreamsReceiver():
         or {...}
         
         '''
+        print(f"message:{message}")
         if 'result' in message.keys():
             print(f"Connecting data: {message}", end=' ')
         else:
@@ -33,7 +33,7 @@ class WebsocketStreamsReceiver():
             else:
                 self.__connected_streams.append("a_stream")
                 self.__dict_connected_streams_time.update({"a_stream":time()})
-            self._data_handler(message)
+            self.__data_handler(message)
             
     @classmethod
     def get_info_about_connected_streams(cls) -> str:
