@@ -1,8 +1,9 @@
 from typing import Union
 from abc import ABC, abstractmethod
 
-class GetterPrice(ABC):
+class AbstractGetterPrice(ABC):
+    @property
     @abstractmethod
-    def get_price(self, symbol:str) -> Union[float, None]:
+    def price(self, symbol:str) -> Union[float, None]:
         pass
 

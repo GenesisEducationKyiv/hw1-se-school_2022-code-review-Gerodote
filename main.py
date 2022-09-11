@@ -15,7 +15,8 @@ def get_rate():
     if rate is None:
         raise HTTPException(
             status_code=400,
-            detail="Or try a little bit later, or check connection of server to Binance.",
+            detail=
+            "Or try a little bit later, or check connection of server to Binance.",
         )
     else:
         return rate
@@ -23,16 +24,14 @@ def get_rate():
 
 @API.post("/subscribe")
 async def subscribe(email: str = Form()):
-    try:    
+    try:
         task = await main_object.subscribe(email)
     except AlreadyExist as exception_obj:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT, detail=exception_obj.__str__()
-        )
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT,
+                            detail=exception_obj.__str__())
     except ValidationError as exception_obj:
-        raise HTTPException(
-            status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=exception_obj.__str__()
-        ) 
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                            detail=exception_obj.__str__())
     return {"description": "succesfully"}
 
 

@@ -2,8 +2,8 @@ import logging
 
 import yaml
 
-from .price_provider.general_part import GetterPrice
-from .price_provider.getter_price_binance import BookTickerPriceBinance
+from .price_provider.general_part import AbstractGetterPrice
+from .price_provider.binance_websocket.getter_price_binance import PriceStorage
 from .email_handling.mail_handler import factory_mail_handler, AbstractMailSender
 from .email_handling.general_part import AbstractEmailRepo
 from .email_handling.repos_emails import EmailRepoFileJSON
@@ -41,9 +41,12 @@ class MainApp:
             self.__text_before_rate: str = config["emails"]["text_before_rate"]
             self.__text_after_rate: str = config["emails"]["text_after_rate"]
 
-            self.__getter_price: GetterPrice = BookTickerPriceBinance(
+            self.__getter_price: AbstractGetterPrice = PriceStorage(
                 symbol=self.__symbol)
 
+            
+            
+            
             logging.info("Configuration file loaded successfully.")
 
     def get_rate(self) -> float:
