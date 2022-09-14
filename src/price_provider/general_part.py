@@ -17,8 +17,10 @@ class currency_t():
 
 
 class AbstractPriceStorage(ABC):
+    @abstractmethod
     def get_price(self, symbol: symbol_t) -> Union[float, None]:
         pass
 
+    @abstractmethod
     def set_price(self, symbol:symbol_t, price: float) -> None:
         pass

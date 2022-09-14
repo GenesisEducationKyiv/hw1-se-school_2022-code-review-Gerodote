@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"name": "for_course_github_2",
+			"path": "."
+		}
+	],
+	"settings": {
+		"python.formatting.provider": "yapf"
+	}
+}

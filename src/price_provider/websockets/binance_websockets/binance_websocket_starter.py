@@ -18,6 +18,14 @@ class BinanceWebsocketStarter():
         self._websocket.start()
         atexit.register(self.__exit__)
 
+    def __enter__(self):
+        self._websocket = WebsocketClient()
+        self._websocket.start()
+        return self
+
+    def __exit__(self, *args, **kwargs):
+        self._websocket.stop()
+
     def subscribe_one_stream(
             self, stream: stream_t,
             message_handler: Callable[[Union[List, Dict]], None]) -> None:
@@ -66,9 +74,3 @@ class BinanceWebsocketStarter():
             secs_to_wait = 10
             logging.info(f"waiting {secs_to_wait} secs")
             sleep(secs_to_wait)
-
-    def __enter__(self) -> None:
-        self._websocket.start()
-
-    def __exit__(self) -> None:
-        self._websocket.stop()

@@ -58,9 +58,9 @@ def test_REST_bookTicker_is_same_as_ws_book_ticker():
 
     binance_websocket_starter = BinanceWebsocketStarter()
     if len(streams) == 1:
-        binance_websocket_starter.subscribe_one_stream(streams[0], WebsocketStreamsReceiver(BinanceWebsocketBooktickerAveragePrice(price_storage),None))
+        binance_websocket_starter.subscribe_one_stream(streams[0], WebsocketStreamsReceiver(BinanceWebsocketBooktickerAveragePrice(price_storage),None,None))
     else:
-        binance_websocket_starter.subscribe_multiple_streams(streams, WebsocketStreamsReceiver(BinanceWebsocketBooktickerAveragePrice(price_storage),"stream"))
+        binance_websocket_starter.subscribe_multiple_streams(streams, WebsocketStreamsReceiver(BinanceWebsocketBooktickerAveragePrice(price_storage),"stream", "data"))
     
     
     spot_client = Client()
@@ -70,8 +70,12 @@ def test_REST_bookTicker_is_same_as_ws_book_ticker():
     while(for_do_while):
         sleep(15)
         for symbol in symbols_lst:
-            if price_storage.get_price(symbol=symbol) is not None:
-                for_do_while = False
+            try:
+                price_storage.get_price(symbol=symbol)
+            except KeyError:
+                count_how_many_times_checked += 1
+                continue
+            for_do_while = False
         if count_how_many_times_checked > 8:
             for_do_while = False
         count_how_many_times_checked += 1
@@ -88,10 +92,10 @@ def test_REST_bookTicker_is_same_as_ws_book_ticker():
             }
     '''
     average_from_REST_API = [(float(sth['bidPrice']) + float(sth['askPrice'] ))/ 2 for sth in from_REST_API]
-    assert(len([average_from_REST_API[i] == price_storage.get_price(symbol=symbols_lst[i]) for i in range(len(symbols_lst))]) == len(symbols_lst))
+    assert(len([(average_from_REST_API[i] == price_storage.get_price(symbol=symbols_lst[i])) for i in range(len(symbols_lst))]) == len(symbols_lst))
 
        
     
-if __name__ == '__main__':
-#     test_subscribe_one_stream()
-    test_REST_bookTicker_is_same_as_ws_book_ticker()
+# if __name__ == '__main__':
+# #     test_subscribe_one_stream()
+#     test_REST_bookTicker_is_same_as_ws_book_ticker()
