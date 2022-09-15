@@ -33,4 +33,4 @@ class BinanceWebsocketBooktickerAveragePrice(AbstractMessageDataProcessing):
         }
         So, we put in object field average price ( (best bid price + best ask price )/2)
         '''
-        self.__storage.set_price(symbol_t(name=message["s"]), (float(message["a"]) + float(message["b"])) / 2)
+        self.__storage.update_price(symbol_t(name=message["s"]), (float(message["a"]) + float(message["b"])) / 2)

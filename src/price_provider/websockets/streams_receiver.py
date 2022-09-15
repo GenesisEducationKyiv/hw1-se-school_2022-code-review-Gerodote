@@ -1,10 +1,10 @@
 from time import time
 from typing import Callable, Dict, Union
 
-from ..general_part import AbstractPriceStorage, symbol_t
+from .general_part import AbstractWebsocketMessageReceiver
 
 
-class WebsocketStreamsReceiver():
+class WebsocketStreamsReceiver(AbstractWebsocketMessageReceiver):
     __connected_streams = []
     __dict_connected_streams_time = {}
     delta_time = 10  # secs

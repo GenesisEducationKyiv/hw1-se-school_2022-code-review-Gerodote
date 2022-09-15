@@ -6,10 +6,10 @@ import logging
 from binance.websocket.spot.websocket_client import (
     SpotWebsocketClient as WebsocketClient, )
 
-from ..general_part import stream_t
+from ..general_part import stream_t, AbstractWebsocketStarter
 
 
-class BinanceWebsocketStarter():
+class BinanceWebsocketStarter(AbstractWebsocketStarter):
     _magic_const_url: int = 45  # len("wss://stream.binance.com:9443/stream?streams=")
     _magic_const_max_size_of_url: int = 16384  # max bytes in one url (limit of cloudflare)
 

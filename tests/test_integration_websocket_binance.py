@@ -46,9 +46,18 @@ def test_subscribe_one_stream():
             result = True
         assert(result)
     
+
+def test_price_storage():
+    sth = PriceStorage()
+    sth.update_price(symbol_t('BTCUAH'), price=800000)
+    assert sth.get_price(symbol_t('BTCUAH')) == 800000
     
-    
-def test_REST_bookTicker_is_same_as_ws_book_ticker():
+def test_REST_bookTicker_is_same_as_ws_book_ticker():  
+    ''' test is passed, though problem: TwistedIsNotRestartable. 
+    Just try run this test by itself without others. 
+    for example : pytest -k REST 
+    This command will run only tests with this substring.
+   '''
     symbols_strings = ["BTCUAH", "BTCUSDT"]
     
     symbols_lst: List[symbol_t] = [symbol_t(name=symbol) for symbol in symbols_strings]
@@ -56,43 +65,43 @@ def test_REST_bookTicker_is_same_as_ws_book_ticker():
     streams: List[stream_t] = StreamCreator(symbols=symbols_lst)
     price_storage:AbstractPriceStorage = PriceStorage()
 
-    binance_websocket_starter = BinanceWebsocketStarter()
-    if len(streams) == 1:
-        binance_websocket_starter.subscribe_one_stream(streams[0], WebsocketStreamsReceiver(BinanceWebsocketBooktickerAveragePrice(price_storage),None,None))
-    else:
-        binance_websocket_starter.subscribe_multiple_streams(streams, WebsocketStreamsReceiver(BinanceWebsocketBooktickerAveragePrice(price_storage),"stream", "data"))
-    
-    
-    spot_client = Client()
-    
-    for_do_while:bool = True
-    count_how_many_times_checked = 0
-    while(for_do_while):
-        sleep(15)
-        for symbol in symbols_lst:
-            try:
-                price_storage.get_price(symbol=symbol)
-            except KeyError:
-                count_how_many_times_checked += 1
-                continue
-            for_do_while = False
-        if count_how_many_times_checked > 8:
-            for_do_while = False
-        count_how_many_times_checked += 1
-    
-    from_REST_API = spot_client.book_ticker(symbols=[symbol.name for symbol in symbols_lst])
-    '''
-        here we got sth like this:
-            {
-            "symbol": "LTCBTC",
-            "bidPrice": "0.00378600",
-            "bidQty": "3.50000000",
-            "askPrice": "0.00379100",
-            "askQty": "26.69000000"
-            }
-    '''
-    average_from_REST_API = [(float(sth['bidPrice']) + float(sth['askPrice'] ))/ 2 for sth in from_REST_API]
-    assert(len([(average_from_REST_API[i] == price_storage.get_price(symbol=symbols_lst[i])) for i in range(len(symbols_lst))]) == len(symbols_lst))
+    with BinanceWebsocketStarter() as binance_websocket_starter:
+        if len(streams) == 1:
+            binance_websocket_starter.subscribe_one_stream(streams[0], WebsocketStreamsReceiver(BinanceWebsocketBooktickerAveragePrice(price_storage),None,None))
+        else:
+            binance_websocket_starter.subscribe_multiple_streams(streams, WebsocketStreamsReceiver(BinanceWebsocketBooktickerAveragePrice(price_storage),"stream", "data"))
+        
+        
+        spot_client = Client()
+        
+        for_do_while:bool = True
+        count_how_many_times_checked = 0
+        while(for_do_while):
+            sleep(15)
+            for symbol in symbols_lst:
+                try:
+                    price_storage.get_price(symbol=symbol)
+                except KeyError:
+                    count_how_many_times_checked += 1
+                    continue
+                for_do_while = False
+            if count_how_many_times_checked > 8:
+                for_do_while = False
+            count_how_many_times_checked += 1
+        
+        from_REST_API = spot_client.book_ticker(symbols=[symbol.name for symbol in symbols_lst])
+        '''
+            here we got sth like this:
+                {
+                "symbol": "LTCBTC",
+                "bidPrice": "0.00378600",
+                "bidQty": "3.50000000",
+                "askPrice": "0.00379100",
+                "askQty": "26.69000000"
+                }
+        '''
+        average_from_REST_API = [(float(sth['bidPrice']) + float(sth['askPrice'] ))/ 2 for sth in from_REST_API]
+        assert(len([(average_from_REST_API[i] == price_storage.get_price(symbol=symbols_lst[i])) for i in range(len(symbols_lst))]) == len(symbols_lst))
 
        
     

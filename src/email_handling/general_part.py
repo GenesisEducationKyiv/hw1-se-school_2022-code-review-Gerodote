@@ -11,16 +11,16 @@ class AbstractEmailRepo(ABC):
 
     @abstractmethod
     async def read_emails(self) -> List[Email]:
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     async def write_emails(self, emails: List[Email]):
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     async def is_already_exist(self, email: Email) -> bool:
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     async def add_email(self, email: Email) -> None:
-        pass
+        raise NotImplementedError()
