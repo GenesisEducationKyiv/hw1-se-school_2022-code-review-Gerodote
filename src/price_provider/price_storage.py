@@ -1,12 +1,11 @@
 from typing import Dict, Union
 
-from .general_part import AbstractCachingStrategy
-from ..general_part import symbol_t, AbstractPriceStorage 
-
+from .general_part import symbol_t, AbstractPriceStorage, AbstractCachingStrategy 
+from .cache_impl import NoCache
 
 class PriceStorage(AbstractPriceStorage):
 
-    def __init__(self, cacher:AbstractCachingStrategy) -> None:
+    def __init__(self, cacher:AbstractCachingStrategy=NoCache()) -> None:
         self.__prices: Dict[str, float] = {}
         self.__cacher = cacher
 
@@ -16,8 +15,18 @@ class PriceStorage(AbstractPriceStorage):
         return self.__prices[symbol.name]
 
     def update_price(self, symbol:symbol_t, price:float) -> None:
+        '''updating price. example: 
+        ```
+            object:AbstractPriceStorage = PriceStorage(strategy:AbstractCachingStrategy=something)
+            object.update_price(symbol_t("BTCUSDT"), 25646.91 )
+            price = object.get_price(symbol_t("BTCUSDT")) # 25646.91
+        ```
+        '''
+        
+        # this bloat code at the beginning is needed now, 'cuz it's only way to live until the code isn't fully async.
         self.__cacher.save_to_cache({symbol,price})
         self.__prices.update({symbol.name:price})
+        
 
     def get_all_prices(self) -> Dict[symbol_t, float]:
         return self.__prices

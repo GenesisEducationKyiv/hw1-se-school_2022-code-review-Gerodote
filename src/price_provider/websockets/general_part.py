@@ -37,8 +37,3 @@ class AbstractWebsocketMessageReceiver(ABC):
     @abstractmethod
     def __call__(self, message:Dict) -> None:
         raise NotImplementedError()
-
-class AbstractCachingStrategy(ABC):
-    @abstractmethod
-    def save_to_cache(self, data) -> None:
-        raise NotImplementedError()

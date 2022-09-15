@@ -11,8 +11,9 @@ main_object = MainApp()
 
 @API.get("/rate")
 def get_rate():
-    rate = main_object.get_rate()
-    if rate is None:
+    try:
+        rate = main_object.get_rate()
+    except KeyError:
         raise HTTPException(
             status_code=400,
             detail=

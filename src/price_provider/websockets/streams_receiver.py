@@ -9,10 +9,10 @@ class WebsocketStreamsReceiver(AbstractWebsocketMessageReceiver):
     __dict_connected_streams_time = {}
     delta_time = 10  # secs
 
-    def __init__(self, handler_message_data: Callable,
+    def __init__(self, data_processor: Callable,
                  key_in_message_corresponding_to_stream_name: Union[str, None],
                  key_in_message_corresponding_to_data: Union[str, None]):
-        self.__data_handler = handler_message_data
+        self.__data_handler = data_processor
         self.__key_in_message_corresponding_to_stream_name = key_in_message_corresponding_to_stream_name
         self.__key_in_message_corresponding_to_data = key_in_message_corresponding_to_data
 

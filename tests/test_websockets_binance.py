@@ -12,7 +12,7 @@ from src.price_provider.websockets.general_part import stream_t, AbstractCreater
 from src.price_provider.websockets.binance_websockets.binance_websocket_starter import BinanceWebsocketStarter
 from src.price_provider.websockets.binance_websockets.binance_data_parser import BinanceBooktickerCreaterStreams, BinanceWebsocketBooktickerAveragePrice
 from src.price_provider.websockets.streams_receiver import WebsocketStreamsReceiver
-from src.price_provider.websockets.price_storage import PriceStorage
+from src.price_provider.price_storage import PriceStorage
 
 config_logging(logging, logging.DEBUG, log_file='logs.txt')
 
@@ -47,10 +47,6 @@ def test_subscribe_one_stream():
         assert(result)
     
 
-def test_price_storage():
-    sth = PriceStorage()
-    sth.update_price(symbol_t('BTCUAH'), price=800000)
-    assert sth.get_price(symbol_t('BTCUAH')) == 800000
     
 def test_REST_bookTicker_is_same_as_ws_book_ticker():  
     ''' test is passed, though problem: TwistedIsNotRestartable. 
@@ -102,9 +98,3 @@ def test_REST_bookTicker_is_same_as_ws_book_ticker():
         '''
         average_from_REST_API = [(float(sth['bidPrice']) + float(sth['askPrice'] ))/ 2 for sth in from_REST_API]
         assert(len([(average_from_REST_API[i] == price_storage.get_price(symbol=symbols_lst[i])) for i in range(len(symbols_lst))]) == len(symbols_lst))
-
-       
-    
-# if __name__ == '__main__':
-# #     test_subscribe_one_stream()
-#     test_REST_bookTicker_is_same_as_ws_book_ticker()

@@ -32,3 +32,12 @@ class AbstractPriceStorage(ABC):
     @abstractmethod
     def get_all_prices(self) -> Dict[symbol_t, float]:
         raise NotImplementedError()
+    
+class AbstractCachingStrategy(ABC):
+    @abstractmethod
+    def save_to_cache(self, data) -> None:
+        raise NotImplementedError()
+    
+    @abstractmethod
+    def get_cache(self):
+        raise NotImplementedError()
