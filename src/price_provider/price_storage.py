@@ -23,7 +23,6 @@ class PriceStorage(AbstractPriceStorage):
         ```
         '''
         
-        # this bloat code at the beginning is needed now, 'cuz it's only way to live until the code isn't fully async.
         self.__cacher.save_to_cache({symbol,price})
         self.__prices.update({symbol.name:price})
         
