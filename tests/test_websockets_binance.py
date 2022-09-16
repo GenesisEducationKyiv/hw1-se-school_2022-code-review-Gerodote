@@ -14,7 +14,7 @@ from src.price_provider.websockets.binance_websockets.binance_data_parser import
 from src.price_provider.websockets.streams_receiver import WebsocketStreamsReceiver
 from src.price_provider.price_storage import PriceStorage
 
-config_logging(logging, logging.DEBUG, log_file='logs.txt')
+config_logging(logging, logging.DEBUG, log_file='binance_logs.txt')
 
 class basic_callback:
     def __init__(self) -> None:

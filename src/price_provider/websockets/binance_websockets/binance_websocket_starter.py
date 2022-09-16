@@ -3,10 +3,13 @@ from typing import Callable, Dict, List, Union
 from time import sleep
 import logging
 
+from binance.lib.utils import config_logging
 from binance.websocket.spot.websocket_client import (
     SpotWebsocketClient as WebsocketClient, )
 
 from ..general_part import stream_t, AbstractWebsocketStarter
+
+config_logging(logging, logging.DEBUG, log_file='./logs/binance_logs.txt')
 
 
 class BinanceWebsocketStarter(AbstractWebsocketStarter):
