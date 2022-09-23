@@ -1,13 +1,13 @@
-import os
 import json
+import logging
+import os
 from shutil import copy2
 from typing import List
-import logging
 
 import aiofiles
 from pydantic import error_wrappers
 
-from .general_part import Email, AbstractEmailRepo
+from .general_part import AbstractEmailRepo, Email
 
 
 class EmailRepoFileJSON(AbstractEmailRepo):
@@ -27,11 +27,11 @@ class EmailRepoFileJSON(AbstractEmailRepo):
                         Email(str=data_piece)
                         for data_piece in not_validated_yet_data
                     ]
-                except json.JSONDecodeError as exep:
+                except json.JSONDecodeError:
                     logging.warning(
                         f"File {self._filename_with_emails} is not JSON.")
                     self._backup_file_to_file()
-                except error_wrappers.ValidationError as exep_2:
+                except error_wrappers.ValidationError:
                     logging.warning(
                         f"Data in file {self._filename_with_emails} is not valid."
                     )

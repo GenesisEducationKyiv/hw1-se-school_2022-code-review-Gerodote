@@ -10,9 +10,9 @@ from .email_handling.repos_emails import EmailRepoFileJSON
 from .email_handling.email_handler import EmailHandler
 from .price_provider.general_part import symbol_t, AbstractPriceStorage
 from .price_provider.websockets.binance_websockets.binance_websocket_starter import BinanceWebsocketStarter
-from .price_provider.websockets.binance_websockets.binance_data_parser import BinanceBooktickerCreaterStreams, BinanceWebsocketBooktickerAveragePrice
-from .price_provider.websockets.streams_receiver import WebsocketStreamsReceiver
-from .price_provider.websockets.general_start_websocket import start_websockets
+from .price_provider.websockets.binance_websockets.binance_data_parser import BinanceBooktickerCreatorStreams, BinanceWebsocketBooktickerAveragePrice
+from .price_provider.websockets.binance_websockets.binance_stream_receiver import BinanceWebsocketStreamsReceiver
+from .price_provider.websockets.how_to_use_it import start_websockets
 from .price_provider.price_storage import PriceStorage
 from .price_provider.cache_impl import CacheToListInMemoryAutoDelete
 
@@ -52,8 +52,8 @@ class MainApp:
             self.__symbol: symbol_t = symbol_t(config["symbols"]["name"][0]) 
             self.__price_storage:AbstractPriceStorage = PriceStorage(CacheToListInMemoryAutoDelete(300))
             # if was support for multiple streams, here would be ...(...(...), "stream","data").
-            message_receiver = WebsocketStreamsReceiver(BinanceWebsocketBooktickerAveragePrice(self.__price_storage), None, None)            
-            start_websockets([self.__symbol], BinanceBooktickerCreaterStreams(),BinanceWebsocketStarter(), message_receiver)
+            message_receiver = BinanceWebsocketStreamsReceiver(BinanceWebsocketBooktickerAveragePrice(self.__price_storage), None, None)            
+            start_websockets([self.__symbol], BinanceBooktickerCreatorStreams(),BinanceWebsocketStarter(), message_receiver)
             
             
             

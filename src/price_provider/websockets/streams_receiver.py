@@ -1,10 +1,11 @@
 from time import time
 from typing import Callable, Dict, Union
+import json
 
 from .general_part import AbstractWebsocketMessageReceiver
 
 
-class WebsocketStreamsReceiver(AbstractWebsocketMessageReceiver):
+class GeneralWebsocketStreamsReceiver(AbstractWebsocketMessageReceiver):
     __connected_streams = []
     __dict_connected_streams_time = {}
     delta_time = 10  # secs
@@ -16,7 +17,7 @@ class WebsocketStreamsReceiver(AbstractWebsocketMessageReceiver):
         self.__key_in_message_corresponding_to_stream_name = key_in_message_corresponding_to_stream_name
         self.__key_in_message_corresponding_to_data = key_in_message_corresponding_to_data
 
-    def __call__(self, message: Dict):
+    def __call__(self, ws, text:str):
         '''
         At this moment the function is expected to get a message the way below.
         This function can do sth when process of receiving data is only in the beginning.
@@ -26,6 +27,12 @@ class WebsocketStreamsReceiver(AbstractWebsocketMessageReceiver):
         or {...}
         
         '''
+        
+        
+        if  isinstance(text,str):
+            message = json.loads(text)
+        else:
+            message = text
         if 'result' in message.keys():
             print(f"Connecting data: {message}", end=' ')
         else:

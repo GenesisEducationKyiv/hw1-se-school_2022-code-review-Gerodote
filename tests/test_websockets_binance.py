@@ -8,10 +8,10 @@ from binance.spot import Spot as Client
 from binance.lib.utils import config_logging
 
 from src.price_provider.general_part import symbol_t, AbstractPriceStorage
-from src.price_provider.websockets.general_part import stream_t, AbstractCreaterStreamsStrings
+from src.price_provider.websockets.general_part import AbstractMessageDataProcessing, stream_t, AbstractCreatorStreamsStrings
 from src.price_provider.websockets.binance_websockets.binance_websocket_starter import BinanceWebsocketStarter
-from src.price_provider.websockets.binance_websockets.binance_data_parser import BinanceBooktickerCreaterStreams, BinanceWebsocketBooktickerAveragePrice
-from src.price_provider.websockets.streams_receiver import WebsocketStreamsReceiver
+from src.price_provider.websockets.binance_websockets.binance_data_parser import BinanceBooktickerCreatorStreams, BinanceWebsocketBooktickerAveragePrice
+from src.price_provider.websockets.binance_websockets.binance_stream_receiver import BinanceWebsocketStreamsReceiver
 from src.price_provider.price_storage import PriceStorage
 
 config_logging(logging, logging.DEBUG, log_file='binance_logs.txt')
@@ -57,15 +57,16 @@ def test_REST_bookTicker_is_same_as_ws_book_ticker():
     symbols_strings = ["BTCUAH", "BTCUSDT"]
     
     symbols_lst: List[symbol_t] = [symbol_t(name=symbol) for symbol in symbols_strings]
-    StreamCreator: AbstractCreaterStreamsStrings = BinanceBooktickerCreaterStreams()
-    streams: List[stream_t] = StreamCreator(symbols=symbols_lst)
+    stream_creator: AbstractCreatorStreamsStrings = BinanceBooktickerCreatorStreams()
+    streams: List[stream_t] = stream_creator(symbols=symbols_lst)
     price_storage:AbstractPriceStorage = PriceStorage()
-
+    data_processor:AbstractMessageDataProcessing = BinanceWebsocketBooktickerAveragePrice(price_storage)
+    
     with BinanceWebsocketStarter() as binance_websocket_starter:
         if len(streams) == 1:
-            binance_websocket_starter.subscribe_one_stream(streams[0], WebsocketStreamsReceiver(BinanceWebsocketBooktickerAveragePrice(price_storage),None,None))
+            binance_websocket_starter.subscribe_one_stream(streams[0], BinanceWebsocketStreamsReceiver(data_processor,None,None))
         else:
-            binance_websocket_starter.subscribe_multiple_streams(streams, WebsocketStreamsReceiver(BinanceWebsocketBooktickerAveragePrice(price_storage),"stream", "data"))
+            binance_websocket_starter.subscribe_multiple_streams(streams, BinanceWebsocketStreamsReceiver(data_processor,"stream", "data"))
         
         
         spot_client = Client()
@@ -76,14 +77,12 @@ def test_REST_bookTicker_is_same_as_ws_book_ticker():
             sleep(15)
             for symbol in symbols_lst:
                 try:
-                    price_storage.get_price(symbol=symbol)
+                    data_processor.price_storage.get_price(symbol=symbol)
                 except KeyError:
                     count_how_many_times_checked += 1
-                    continue
+                    break
+            if count_how_many_times_checked > 4:
                 for_do_while = False
-            if count_how_many_times_checked > 8:
-                for_do_while = False
-            count_how_many_times_checked += 1
         
         from_REST_API = spot_client.book_ticker(symbols=[symbol.name for symbol in symbols_lst])
         '''
@@ -97,4 +96,4 @@ def test_REST_bookTicker_is_same_as_ws_book_ticker():
                 }
         '''
         average_from_REST_API = [(float(sth['bidPrice']) + float(sth['askPrice'] ))/ 2 for sth in from_REST_API]
-        assert(len([(average_from_REST_API[i] == price_storage.get_price(symbol=symbols_lst[i])) for i in range(len(symbols_lst))]) == len(symbols_lst))
+        assert(len([(average_from_REST_API[i] == data_processor.price_storage.get_price(symbol=symbols_lst[i])) for i in range(len(symbols_lst))]) == len(symbols_lst))

@@ -1,11 +1,9 @@
 from typing import List
-import json
-
 from ...general_part import AbstractPriceStorage, symbol_t
-from ..general_part import AbstractCreaterStreamsStrings, AbstractMessageDataProcessing, stream_t
+from ..general_part import AbstractCreatorStreamsStrings, AbstractMessageDataProcessing, stream_t
 
 
-class BinanceBooktickerCreaterStreams(AbstractCreaterStreamsStrings):
+class BinanceBooktickerCreatorStreams(AbstractCreatorStreamsStrings):
     '''
     According to https://docs.binance.us/?python#ticker-streams it makes <symbol>@bookTicker
     '''
@@ -18,7 +16,7 @@ class BinanceBooktickerCreaterStreams(AbstractCreaterStreamsStrings):
 
 class BinanceWebsocketBooktickerAveragePrice(AbstractMessageDataProcessing):
     def __init__(self, storage:AbstractPriceStorage):
-        self.__storage = storage
+        self.price_storage = storage
     
     def __call__(self, message):
         '''
@@ -33,4 +31,4 @@ class BinanceWebsocketBooktickerAveragePrice(AbstractMessageDataProcessing):
         }
         So, we put in object field average price ( (best bid price + best ask price )/2)
         '''
-        self.__storage.update_price(symbol_t(name=message["s"]), (float(message["a"]) + float(message["b"])) / 2)
+        self.price_storage.update_price(symbol_t(name=message["s"]), (float(message["a"]) + float(message["b"])) / 2)

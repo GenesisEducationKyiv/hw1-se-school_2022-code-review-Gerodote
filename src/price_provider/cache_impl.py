@@ -40,7 +40,7 @@ class CacheToFileNoDelete(AbstractCachingStrategy):
     
     def save_to_cache(self, data) -> None:
         with open(self.__filename_to_save_data, mode='a') as file:
-            file.write(data)
+            file.write(str(data))
             
     def get_cache(self):
         result = None

@@ -1,10 +1,10 @@
 from typing import List
 
 from ..general_part import symbol_t
-from .general_part import stream_t, AbstractCreaterStreamsStrings, AbstractCreaterStreamsStrings, AbstractWebsocketStarter, AbstractWebsocketMessageReceiver
+from .general_part import stream_t, AbstractCreatorStreamsStrings, AbstractCreaterStreamsStrings, AbstractWebsocketStarter, AbstractWebsocketMessageReceiver
 
 def start_websockets(symbols:List[symbol_t], 
-                     streams_name_creator:AbstractCreaterStreamsStrings, 
+                     streams_name_creator:AbstractCreatorStreamsStrings, 
                      websocket_net_handler:AbstractWebsocketStarter,
                      websocket_message_receiver:AbstractWebsocketMessageReceiver
                      ) -> None:

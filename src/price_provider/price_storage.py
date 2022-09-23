@@ -11,7 +11,7 @@ class PriceStorage(AbstractPriceStorage):
 
     def get_price(self, symbol: symbol_t) -> Union[float, None]:
         if symbol.name not in self.__prices.keys():
-            raise KeyError(f"There's no data about symbol : {symbol.name}.")
+            raise KeyError(f"There's no data about symbol : {symbol.name}.\nNext data exists: {self.__prices}")
         return self.__prices[symbol.name]
 
     def update_price(self, symbol:symbol_t, price:float) -> None:
@@ -23,7 +23,7 @@ class PriceStorage(AbstractPriceStorage):
         ```
         '''
         
-        self.__cacher.save_to_cache({symbol,price})
+        self.__cacher.save_to_cache(data={symbol,price})
         self.__prices.update({symbol.name:price})
         
 
