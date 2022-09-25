@@ -1,5 +1,5 @@
 symbols:
-  name: ["BTCUSD"]
+  name: ["BTCUSDT"]
 
 # env:
   # CRYPTO_CURRENCY_PROVIDER: "gemini"
