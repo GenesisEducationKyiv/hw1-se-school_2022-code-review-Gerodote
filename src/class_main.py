@@ -5,9 +5,10 @@ import yaml
 from pydantic import ValidationError
 
 from .email_handling.email_handler import EmailHandler
-from .email_handling.general_part import AbstractEmailRepo
-from .email_handling.mail_handler import (AbstractMailSender,
-                                          factory_mail_handler)
+from .email_handling.general_part import (AbstractEmailHandler,
+                                          AbstractEmailRepo)
+from .email_handling.mail_sender import (AbstractMailSender,
+                                         factory_mail_handler)
 from .email_handling.repos_emails import EmailRepoFileJSON
 from .price_provider.binance_provider import BinancePriceProvider
 from .price_provider.gemini_provider import GeminiPriceProvider
@@ -39,7 +40,8 @@ class MainApp:
 
             email_repo: AbstractEmailRepo = EmailRepoFileJSON(
                 config["emails"]["file_with_emails"])
-            self.__mail_handler = EmailHandler(email_repo, mail_sender)
+            self.__mail_handler: AbstractEmailHandler = EmailHandler(
+                email_repo, mail_sender)
             self.__subject: str = config["emails"]["subject"]
             self.__text_before_rate: str = config["emails"]["text_before_rate"]
             self.__text_after_rate: str = config["emails"]["text_after_rate"]
