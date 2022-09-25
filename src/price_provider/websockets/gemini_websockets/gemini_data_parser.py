@@ -7,11 +7,11 @@ from ..general_part import (AbstractCreatorStreamsStrings,
 
 class GeminiWebsocketTopOfBookCreatorStream(AbstractCreatorStreamsStrings):
 
-    def __call__(self, symbols: List[symbol_t]) -> stream_t:
+    def __call__(self, symbols: List[symbol_t]) -> List[stream_t]:
         stream = "/v1/multimarketdata?symbols=" + ",".join(
             [symbol.name.upper() for symbol in symbols])
         stream += "&top_of_book=true"
-        return stream_t(stream)
+        return [stream_t(stream)]
 
 
 class GeminiWebsocketTopOfBookDataProcessing(AbstractMessageDataProcessing):

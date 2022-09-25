@@ -1,8 +1,8 @@
 symbols:
-  name: ["BTCUSDT"]
+  name: ["BTCUSD"]
 
-# env:
-#   CRYPTO_CURRENCY_PROVIDER: "gemini"
+env:
+  CRYPTO_CURRENCY_PROVIDER: "gemini"
 
 emails:
   file_with_emails: "subscribed_emails.json"

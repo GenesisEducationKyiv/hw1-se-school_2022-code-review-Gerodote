@@ -20,7 +20,7 @@ def general_on_close(ws, close_status_code, close_msg):
     print(close_status_code, close_msg)
 
 
-class WebsocketStarter(AbstractWebsocketStarter):
+class GeneralWebsocketStarter(AbstractWebsocketStarter):
 
     def __init__(self,
                  base_wss_url: str,

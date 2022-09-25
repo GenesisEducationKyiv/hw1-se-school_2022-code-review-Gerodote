@@ -1,6 +1,6 @@
+import json
 from time import time
 from typing import Callable, Dict, Union
-import json
 
 from .general_part import AbstractWebsocketMessageReceiver
 
@@ -17,7 +17,7 @@ class GeneralWebsocketStreamsReceiver(AbstractWebsocketMessageReceiver):
         self.__key_in_message_corresponding_to_stream_name = key_in_message_corresponding_to_stream_name
         self.__key_in_message_corresponding_to_data = key_in_message_corresponding_to_data
 
-    def __call__(self, ws, text:str):
+    def __call__(self, ws, message:Union[str,Dict]):
         '''
         At this moment the function is expected to get a message the way below.
         This function can do sth when process of receiving data is only in the beginning.
@@ -27,31 +27,30 @@ class GeneralWebsocketStreamsReceiver(AbstractWebsocketMessageReceiver):
         or {...}
         
         '''
-        
-        
-        if  isinstance(text,str):
-            message = json.loads(text)
+
+        if isinstance(message, str):
+            received_message = json.loads(message)
         else:
-            message = text
-        if 'result' in message.keys():
-            print(f"Connecting data: {message}", end=' ')
+            received_message = message
+        if 'result' in received_message.keys():
+            print(f"Connecting data: {received_message}", end=' ')
         else:
             if self.__key_in_message_corresponding_to_stream_name is not None:
-                if message[
+                if received_message[
                         self.
                         __key_in_message_corresponding_to_stream_name] not in self.__connected_streams:
-                    self.__connected_streams.append(message[
+                    self.__connected_streams.append(received_message[
                         self.__key_in_message_corresponding_to_stream_name])
                 self.__dict_connected_streams_time.update({
-                    message[self.__key_in_message_corresponding_to_stream_name]:
+                    received_message[self.__key_in_message_corresponding_to_stream_name]:
                     time()
                 })
                 self.__data_handler(
-                    message[self.__key_in_message_corresponding_to_data])
+                    received_message[self.__key_in_message_corresponding_to_data])
             else:
                 self.__connected_streams.append("a_stream")
                 self.__dict_connected_streams_time.update({"a_stream": time()})
-                self.__data_handler(message)
+                self.__data_handler(received_message)
 
     @classmethod
     def get_info_about_connected_streams(cls) -> str:
