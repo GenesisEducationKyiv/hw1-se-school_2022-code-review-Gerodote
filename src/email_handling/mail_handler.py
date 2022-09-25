@@ -39,7 +39,7 @@ class GmailSender(AbstractMailSender):
         
 def factory_mail_handler(mode='gmail', *args, **kwargs) -> AbstractMailSender:
         '''
-        Use any mode from: "gmail", "SMTP"
+        Use any mode from: "gmail"
         '''
         if mode == 'gmail':
             return GmailSender(*args, **kwargs)

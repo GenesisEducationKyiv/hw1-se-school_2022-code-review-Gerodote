@@ -1,7 +1,7 @@
 from typing import List
 
 from ..general_part import symbol_t
-from .general_part import stream_t, AbstractCreatorStreamsStrings, AbstractCreaterStreamsStrings, AbstractWebsocketStarter, AbstractWebsocketMessageReceiver
+from .general_part import stream_t, AbstractCreatorStreamsStrings, AbstractCreatorStreamsStrings, AbstractWebsocketStarter, AbstractWebsocketMessageReceiver
 
 def start_websockets(symbols:List[symbol_t], 
                      streams_name_creator:AbstractCreatorStreamsStrings, 

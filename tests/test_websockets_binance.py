@@ -1,6 +1,5 @@
-from distutils.command import config
 from time import sleep
-from typing import Dict, List
+from typing import Dict, List, Union
 import logging
 import json
 
@@ -45,9 +44,24 @@ def test_subscribe_one_stream():
         if 'u' in sth2.message.keys():
             result = True
         assert(result)
-    
 
+class DumbDataProcessor(AbstractMessageDataProcessing):
+    def __init__(self):
+        self._inner_data = None
     
+    def __call__(self, data: Union[Dict, List]) -> None:
+        self._inner_data = data
+        
+    def get_inner_data(self):
+        return self._inner_data
+
+def test_binance_stream_receiver():
+    sth_1 = DumbDataProcessor()
+    sth = BinanceWebsocketStreamsReceiver(sth_1, None, None)
+    sth('{"text":"txt"}')
+    assert sth_1.get_inner_data() == {"text":"txt"}
+    
+     
 def test_REST_bookTicker_is_same_as_ws_book_ticker():  
     ''' test is passed, though problem: TwistedIsNotRestartable. 
     Just try run this test by itself without others. 

@@ -2,19 +2,17 @@ import logging
 from typing import List
 
 import yaml
+from pydantic import ValidationError
 
-
-from .email_handling.mail_handler import factory_mail_handler, AbstractMailSender
-from .email_handling.general_part import AbstractEmailRepo
-from .email_handling.repos_emails import EmailRepoFileJSON
 from .email_handling.email_handler import EmailHandler
-from .price_provider.general_part import symbol_t, AbstractPriceStorage
-from .price_provider.websockets.binance_websockets.binance_websocket_starter import BinanceWebsocketStarter
-from .price_provider.websockets.binance_websockets.binance_data_parser import BinanceBooktickerCreatorStreams, BinanceWebsocketBooktickerAveragePrice
-from .price_provider.websockets.binance_websockets.binance_stream_receiver import BinanceWebsocketStreamsReceiver
-from .price_provider.websockets.how_to_use_it import start_websockets
-from .price_provider.price_storage import PriceStorage
-from .price_provider.cache_impl import CacheToListInMemoryAutoDelete
+from .email_handling.general_part import AbstractEmailRepo
+from .email_handling.mail_handler import (AbstractMailSender,
+                                          factory_mail_handler)
+from .email_handling.repos_emails import EmailRepoFileJSON
+from .price_provider.binance_provider import BinancePriceProvider
+from .price_provider.gemini_provider import GeminiPriceProvider
+from .price_provider.general_part import AbstractPriceProvider, symbol_t
+
 
 class BadConfig(Exception):
     pass
@@ -39,7 +37,6 @@ class MainApp:
                     "In config there's no 'email -> *mail_sender_service_name* ', or it's there, but not implemented in the application."
                 )
 
-            
             email_repo: AbstractEmailRepo = EmailRepoFileJSON(
                 config["emails"]["file_with_emails"])
             self.__mail_handler = EmailHandler(email_repo, mail_sender)
@@ -47,23 +44,25 @@ class MainApp:
             self.__text_before_rate: str = config["emails"]["text_before_rate"]
             self.__text_after_rate: str = config["emails"]["text_after_rate"]
 
+            try:
+                self.__symbol = symbol_t(config["symbols"]["name"][0])
+            except ValidationError as e:
+                raise BadConfig(
+                    f"symbol is written in wrong way. Details if they exist: {e.__str__()}"
+                )
+            if "env" in config:
+                if config["env"]["CRYPTO_CURRENCY_PROVIDER"] == "gemini":
+                    self.__price_provider: AbstractPriceProvider = GeminiPriceProvider(
+                        self.__symbol)
+            else:  # if config["env"]["CRYPTO_CURRENCY_PROVIDER"] == "binance":
+                self.__price_provider: AbstractPriceProvider = BinancePriceProvider(
+                    self.__symbol)
 
-            # because there's still no support in our API for multiple subscription data.
-            self.__symbol: symbol_t = symbol_t(config["symbols"]["name"][0]) 
-            self.__price_storage:AbstractPriceStorage = PriceStorage(CacheToListInMemoryAutoDelete(300))
-            # if was support for multiple streams, here would be ...(...(...), "stream","data").
-            message_receiver = BinanceWebsocketStreamsReceiver(BinanceWebsocketBooktickerAveragePrice(self.__price_storage), None, None)            
-            start_websockets([self.__symbol], BinanceBooktickerCreatorStreams(),BinanceWebsocketStarter(), message_receiver)
-            
-            
-            
             logging.info("Configuration file loaded successfully.")
 
     def get_rate(self) -> float:
-        task_get_price = self.__price_storage.get_price(self.__symbol)
+        task_get_price = self.__price_provider.get_price(self.__symbol)
         return task_get_price
-
-
 
     async def subscribe(self, email: str) -> None:
         await self.__mail_handler.subscribe(email)

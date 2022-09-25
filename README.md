@@ -21,7 +21,7 @@ The program do next stuff:
       4. Android? [Termux](https://github.com/termux/termux-app/releases) is your best friend.
 2. `git clone https://github.com/Gerodote/for_course.git` . If you haven't, install git. Again, in which way to do so depends on what's your system is
 3. `python -mpip install --upgrade pip` . Depending on your system, the beginning of the command can be `python3`
-4. `pip install -r requirements.txt` or try `pip install aiofiles binance-connector fastapi uvicorn google-auth-httplib2 google-auth-oauthlib google-api-python-client python-multipart`. If your CPU has ARM architecture, strongly recommend type `pip install wheel` before this command. Especially, if you run in [termux](https://github.com/termux/termux-app/releases)
+4. `pip install -r requirements.txt` or try `pip install aiofiles binance-connector fastapi uvicorn google-auth-httplib2 google-auth-oauthlib google-api-python-client python-multipart pyyaml websocket-client pydantic pydantic[email]`. If your CPU has ARM architecture, strongly recommend type `pip install wheel` before this command. Especially, if you run in [termux](https://github.com/termux/termux-app/releases)
 5. Setup gmail account as in guide below.
 6. Run HTTP API server: `uvicorn main:API --host 0.0.0.0 --port 80`
 7. Check how it works with localhost:80/docs

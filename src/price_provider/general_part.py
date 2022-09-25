@@ -41,3 +41,8 @@ class AbstractCachingStrategy(ABC):
     @abstractmethod
     def get_cache(self):
         raise NotImplementedError()
+    
+class AbstractPriceProvider(ABC):
+    @abstractmethod
+    def get_price(self, symbol:symbol_t) -> float:
+        raise NotImplementedError()
