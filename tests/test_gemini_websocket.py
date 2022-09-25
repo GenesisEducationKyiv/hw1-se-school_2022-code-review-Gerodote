@@ -6,7 +6,8 @@ from src.price_provider.cache_impl import CacheToFileNoDelete, NoCache
 from src.price_provider.general_part import AbstractPriceStorage, symbol_t
 from src.price_provider.price_storage import PriceStorage
 from src.price_provider.websockets.gemini_websockets.gemini_data_parser import (
-    GeminiTopOfBookCreatorStream, GeminiTopOfBookDataProcessing)
+    GeminiWebsocketTopOfBookCreatorStream,
+    GeminiWebsocketTopOfBookDataProcessing)
 from src.price_provider.websockets.gemini_websockets.gemini_websocket_starter import \
     GeminiWebsocketStarter
 from src.price_provider.websockets.general_part import (
@@ -16,14 +17,14 @@ from src.price_provider.websockets.streams_receiver import \
 
 
 def test_gemini_check_string():
-    sth = GeminiTopOfBookCreatorStream()
+    sth = GeminiWebsocketTopOfBookCreatorStream()
     sth2 = sth.__call__([symbol_t("BTCUSD"), symbol_t("ETHUSD")])
     assert sth2 == stream_t(
         "/v1/multimarketdata?symbols=BTCUSD,ETHUSD&top_of_book=true")
 
 
 def test_gemini_check_data_processor():
-    sth = GeminiTopOfBookDataProcessing(PriceStorage(NoCache()))
+    sth = GeminiWebsocketTopOfBookDataProcessing(PriceStorage(NoCache()))
     sth.__call__(message=json.loads(
         '{"type":"update","eventId":143329393665,"timestamp":1663603023,"timestampms":1663603023484,"socket_sequence":232,"events":[{"type":"change","side":"bid","price":"1341.48","remaining":"1.7","reason":"top-of-book","symbol":"ETHUSD"}]}'
     ))
@@ -41,10 +42,10 @@ def test_gemini_ws_top_of_book():
     symbols_lst: List[symbol_t] = [
         symbol_t(name=symbol) for symbol in symbols_strings
     ]
-    stream_creator: AbstractCreatorStreamsStrings = GeminiTopOfBookCreatorStream(
+    stream_creator: AbstractCreatorStreamsStrings = GeminiWebsocketTopOfBookCreatorStream(
     )
     streams: stream_t = stream_creator(symbols=symbols_lst)
-    data_processor: GeminiTopOfBookDataProcessing = GeminiTopOfBookDataProcessing(
+    data_processor: GeminiWebsocketTopOfBookDataProcessing = GeminiWebsocketTopOfBookDataProcessing(
         PriceStorage(CacheToFileNoDelete("cache_prices.txt")))
     ws_starter: AbstractWebsocketStarter = GeminiWebsocketStarter()
 

@@ -10,8 +10,8 @@ from .email_handling.general_part import (AbstractEmailHandler,
 from .email_handling.mail_sender import (AbstractMailSender,
                                          factory_mail_handler)
 from .email_handling.repos_emails import EmailRepoFileJSON
-from .price_provider.binance_provider import BinancePriceProvider
-from .price_provider.gemini_provider import GeminiPriceProvider
+from .price_provider.binance_provider import BinanceWebsocketPriceProvider
+from .price_provider.gemini_provider import GeminiWebsocketPriceProvider
 from .price_provider.general_part import AbstractPriceProvider, symbol_t
 
 
@@ -54,10 +54,10 @@ class MainApp:
                 )
             if "env" in config:
                 if config["env"]["CRYPTO_CURRENCY_PROVIDER"] == "gemini":
-                    self.__price_provider: AbstractPriceProvider = GeminiPriceProvider(
+                    self.__price_provider: AbstractPriceProvider = GeminiWebsocketPriceProvider(
                         self.__symbol)
             else:  # if config["env"]["CRYPTO_CURRENCY_PROVIDER"] == "binance":
-                self.__price_provider: AbstractPriceProvider = BinancePriceProvider(
+                self.__price_provider: AbstractPriceProvider = BinanceWebsocketPriceProvider(
                     self.__symbol)
 
             logging.info("Configuration file loaded successfully.")

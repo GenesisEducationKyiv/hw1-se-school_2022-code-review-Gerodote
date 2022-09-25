@@ -1,9 +1,11 @@
 from typing import List
+
 from ...general_part import AbstractPriceStorage, symbol_t
-from ..general_part import AbstractCreatorStreamsStrings, AbstractMessageDataProcessing, stream_t
+from ..general_part import (AbstractCreatorStreamsStrings,
+                            AbstractMessageDataProcessing, stream_t)
 
 
-class BinanceBooktickerCreatorStreams(AbstractCreatorStreamsStrings):
+class BinanceWebsocketBooktickerCreatorStreams(AbstractCreatorStreamsStrings):
     '''
     According to https://docs.binance.us/?python#ticker-streams it makes <symbol>@bookTicker
     '''

@@ -1,10 +1,11 @@
 from typing import Dict, List
 
 from ...general_part import AbstractPriceStorage, symbol_t
-from ..general_part import stream_t, AbstractCreatorStreamsStrings, AbstractMessageDataProcessing
+from ..general_part import (AbstractCreatorStreamsStrings,
+                            AbstractMessageDataProcessing, stream_t)
 
 
-class GeminiTopOfBookCreatorStream(AbstractCreatorStreamsStrings):
+class GeminiWebsocketTopOfBookCreatorStream(AbstractCreatorStreamsStrings):
 
     def __call__(self, symbols: List[symbol_t]) -> stream_t:
         stream = "/v1/multimarketdata?symbols=" + ",".join(
@@ -13,12 +14,12 @@ class GeminiTopOfBookCreatorStream(AbstractCreatorStreamsStrings):
         return stream_t(stream)
 
 
-class GeminiTopOfBookDataProcessing(AbstractMessageDataProcessing):
+class GeminiWebsocketTopOfBookDataProcessing(AbstractMessageDataProcessing):
 
     def __init__(self, storage: AbstractPriceStorage):
         self.price_storage = storage
 
-    def __call__(self, message:Dict):
+    def __call__(self, message: Dict):
         '''
             it from next messages gets price and puts it into storage.
             {"type":"update","eventId":143329393638,"timestamp":1663603023,"timestampms":1663603023472,"socket_sequence":229,"events":[{"type":"change","side":"bid","price":"1341.62","remaining":"1.7","reason":"top-of-book","symbol":"ETHUSD"}]}
