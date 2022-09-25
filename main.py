@@ -1,8 +1,8 @@
 from fastapi import FastAPI, Form, HTTPException, status
 from pydantic.error_wrappers import ValidationError
 
-from src.email_handling.email_handler import AlreadyExist
 from src.class_main import MainApp
+from src.email_handling.email_handler import AlreadyExist
 
 API = FastAPI()
 
@@ -16,8 +16,7 @@ def get_rate():
     except KeyError:
         raise HTTPException(
             status_code=400,
-            detail=
-            "Or try a little bit later, or check connection of server to Binance.",
+            detail="Or try a little bit later, or check connection of server.",
         )
     else:
         return rate
