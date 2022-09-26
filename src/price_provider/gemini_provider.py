@@ -1,4 +1,3 @@
-from time import sleep
 from typing import List
 
 from .cache_impl import CacheToFileNoDelete

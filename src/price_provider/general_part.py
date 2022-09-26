@@ -1,4 +1,4 @@
-from typing import Dict, Union
+from typing import Any, Dict, Union
 from abc import ABC, abstractmethod
 
 from pydantic.dataclasses import dataclass as pyd_dataclass
@@ -18,7 +18,7 @@ class currency_t():
 
 class AbstractPriceStorage(ABC):
     @abstractmethod
-    def get_price(self, symbol: symbol_t) -> Union[float, None]:
+    def get_price(self, symbol: symbol_t) -> float:
         raise NotImplementedError()
 
     @abstractmethod
@@ -35,11 +35,11 @@ class AbstractPriceStorage(ABC):
     
 class AbstractCachingStrategy(ABC):
     @abstractmethod
-    def save_to_cache(self, data) -> None:
+    def save_to_cache(self, data:Any) -> None:
         raise NotImplementedError()
     
     @abstractmethod
-    def get_cache(self):
+    def get_cache(self) -> Any:
         raise NotImplementedError()
     
 class AbstractPriceProvider(ABC):

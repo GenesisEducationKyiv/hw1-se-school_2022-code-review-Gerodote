@@ -22,3 +22,4 @@ binance_logs.txt
 /logs
 cache_prices.txt
 cache_prices_gemini.txt
+src/price_provider/__pycache__/general_part.cpython-310.pyc

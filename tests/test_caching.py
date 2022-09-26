@@ -6,7 +6,7 @@ from src.price_provider.cache_impl import CacheToListInMemoryAutoDelete, CacheTo
 def test_cache_to_file():
     filename:str = "test_cache_to_file.txt"
     cacher = CacheToFileNoDelete(filename)
-    cacher.cache_to_file("sth")
+    cacher.save_to_cache("sth")
     sth = None
     with open(filename,"r") as f:
         sth = f.read()
