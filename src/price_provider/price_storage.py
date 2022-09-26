@@ -9,7 +9,7 @@ class PriceStorage(AbstractPriceStorage):
         self.__prices: Dict[str, float] = {}
         self.__cacher = cacher
 
-    def get_price(self, symbol: symbol_t) -> Union[float, None]:
+    def get_price(self, symbol: symbol_t) -> float:
         if symbol.name not in self.__prices.keys():
             raise KeyError(f"There's no data about symbol : {symbol.name}.\nNext data exists: {self.__prices}")
         return self.__prices[symbol.name]
@@ -28,7 +28,8 @@ class PriceStorage(AbstractPriceStorage):
         
 
     def get_all_prices(self) -> Dict[symbol_t, float]:
-        return self.__prices
+        return {
+            symbol_t(key):value for (key,value) in self.__prices}
     
     def delete_price(self, symbol:symbol_t) -> None:
         result = self.__prices.pop(symbol.name, None)
