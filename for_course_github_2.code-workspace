@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"name": "for_course_github_2",
+			"path": "."
+		}
+	],
+	"settings": {
+		"editor.formatOnSaveMode": "file",
+		"editor.formatOnSave": true,
+		"editor.codeActionsOnSave": {
+			"source.organizeImports": true
+		},
+		"python.formatting.provider": "yapf"
+	}
+}
